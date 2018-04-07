@@ -4,17 +4,9 @@
 # Módulos personales
 from FILE.File import *
 from AFN.Afn import *
+from STRING.String import *
+
 # Constantes
-
-# Clases
-# ---------------------------------------------------------------------
-
-# ---------------------------------------------------------------------
-
-# Funciones
-# ---------------------------------------------------------------------
-
-# ---------------------------------------------------------------------
 
 def main():
     file = File('1.txt')
@@ -33,6 +25,16 @@ def main():
     print("F -> {}".format(F))
     print("Delta -> {}".format(delta))
 
+    string = String()
+    string.setString()
+    string.check_string(True)
+
+    while True:
+        if(string.match_sigma(sigma)):
+            break
+        else:
+            string.check_string(False)
+            string.check_string(True)
 
     file.close_file()
 

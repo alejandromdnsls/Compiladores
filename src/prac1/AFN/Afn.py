@@ -20,7 +20,7 @@ class Quintupla:
 
     @property
     def getDelta(self):
-        return self.content[4:len(self.content)+1]
+        return self.content[4:]
 
 class Afn:
     pass
