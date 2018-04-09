@@ -19,22 +19,17 @@ class String:
         else:
             self.string = input("Ingresa una cadena que pertezca al alfabeto: ")
 
-    """def stringto_list(self):
-        aux = []
-        for c in self.string:
-            aux.append(c)
-        self.string = []
-        self.string = aux"""
-
     def match_sigma(self, sigma):
         flag = True
-        for car_sigma in sigma:
-            for car_string in self.string:
-                if car_sigma == car_string:
+        for car_string in self.string:
+            for car_sigma in sigma:
+                if car_string == car_sigma:
                     flag = True
-                    continue
+                    break
                 else:
                     flag = False
+            if not flag:
+                break
         if flag:
             return True
         else:
