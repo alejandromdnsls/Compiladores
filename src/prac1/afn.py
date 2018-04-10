@@ -5,6 +5,7 @@
 from FILE.File import *
 from AFN.Afn import *
 from STRING.String import *
+from TAD.Queue import *
 
 # Constantes
 
@@ -35,6 +36,14 @@ def main():
         else:
             string.check_string(False)
             string.check_string(True)
+
+    queue = Queue()
+
+    print(queue.is_empty())
+
+    queue.add('a')
+
+    print(queue.length())
 
     file.close_file()
 
