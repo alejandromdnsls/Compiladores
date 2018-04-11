@@ -5,12 +5,10 @@
 from FILE.File import *
 from AFN.Afn import *
 from STRING.String import *
-from TAD.Queue import *
 
-# Constantes
 
 def main():
-    file = File('1.txt')
+    file = File('4.txt')
     file.read()
 
     quintupla = Quintupla(file.getContent)
@@ -28,20 +26,27 @@ def main():
 
     string = String()
     string.setString()
-    string.check_string(True)
+    #string.check_string(True)
 
     while True:
         if(string.match_sigma(sigma)):
             break
+        """
         else:
             string.check_string(False)
-            string.check_string(True)
+            string.check_string(True)"""
 
     afn = Afn(file.getContent)
 
     camino = ""
-    
-    afn.recorrer(string.getString, afn.start_state()[0], camino)
+
+    flag = afn.recorrer(string.getString, afn.start_state()[0], camino)
+
+    if flag == False:
+        print("No valido")
+    else:
+        print("Valido")
+
 
     file.close_file()
 

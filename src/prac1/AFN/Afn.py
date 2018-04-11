@@ -1,5 +1,3 @@
-from TAD.Queue import *
-
 class Quintupla:
     def __init__(self, content):
         self.content = content
@@ -26,7 +24,7 @@ class Quintupla:
 
 class Afn:
     #queue = Queue()
-    #queue_aux = Queue()
+    i = 0
 
     def __init__(self, content):
         self.quintupla = Quintupla(content)
@@ -42,23 +40,25 @@ class Afn:
         lista.append(self.start_state()[0])
         for state in camino:
             lista.append(state)
-        if(self.final_state(lista[-1])):
-            print("Camino válido: {}".format(lista))
-        else:
-            print("Camino no válido: {} ".format(lista))
+        print("Camino: {}".format(lista))
 
-
-    def recorrer(self, string, start_state, camino):
-        if len(string) < 1:
-            simbolo = "E"
-            self.imprimir_camino(camino)
+    def recorrer(self, string, now_state, camino):
+        if len(string) == 0:
+            simbolo = 0
+            if(self.final_state(now_state)):
+                self.imprimir_camino(camino)
+                self.i += 1
         else:
             simbolo = string[0]
 
         lista = []
         for line in self.quintupla.getDelta:
-            if start_state == line[0] and simbolo == line[1]:
+            if now_state == line[0] and simbolo == line[1]:
                 lista.append(line[2])
         for item in lista:
-            self.recorrer(string[1:], item, camino=camino+item )
-        lista.clear()
+            self.recorrer(string[1:], item, camino=camino+item)
+
+        if self.i == 0:
+            return False
+        else:
+            return True
