@@ -37,13 +37,11 @@ def main():
             string.check_string(False)
             string.check_string(True)
 
-    queue = Queue()
+    afn = Afn(file.getContent)
 
-    print(queue.is_empty())
-
-    queue.add('a')
-
-    print(queue.length())
+    camino = ""
+    
+    afn.recorrer(string.getString, afn.start_state()[0], camino)
 
     file.close_file()
 
