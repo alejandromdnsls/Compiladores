@@ -2,22 +2,12 @@ class String:
 
     string = None
 
-    def setString(self):
-        self.string = input("Cadena: ")
+    def setString(self, string):
+        self.string = string
 
     @property
     def getString(self):
         return self.string
-
-    def check_string(self, flag):
-        if flag:
-            while True:
-                if self.string.isalpha():
-                    break
-                else:
-                    self.string = input("Try again... Inserta una cadena: ")
-        else:
-            self.string = input("Ingresa una cadena que pertezca al alfabeto: ")
 
     def match_sigma(self, sigma):
         flag = True

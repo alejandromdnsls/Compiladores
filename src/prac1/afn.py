@@ -8,7 +8,7 @@ from STRING.String import *
 
 
 def main():
-    file = File('4.txt')
+    file = File('1.txt')
     file.read()
 
     quintupla = Quintupla(file.getContent)
@@ -25,16 +25,15 @@ def main():
     print("Delta -> {}".format(delta))
 
     string = String()
-    string.setString()
-    #string.check_string(True)
+    str_toval = input("Cadena: ")
+    string.setString(str_toval)
 
     while True:
         if(string.match_sigma(sigma)):
             break
-        """
         else:
-            string.check_string(False)
-            string.check_string(True)"""
+            str_toval = input("Ingresa una cadena que pertenezca al alfabeto: ")
+            string.setString(str_toval)
 
     afn = Afn(file.getContent)
 
@@ -42,11 +41,11 @@ def main():
 
     flag = afn.recorrer(string.getString, afn.start_state()[0], camino)
 
-    if flag == False:
-        print("No valido")
+    if afn.ask_strVal(flag):
+        print("Cadena válida en: ")
+        afn.imprimir_camino(camino)
     else:
-        print("Valido")
-
+        print("Cadena no válida")
 
     file.close_file()
 
