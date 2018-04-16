@@ -7,7 +7,7 @@ from STRING.String import *
 from AFNE.AfnE import *
 
 def main():
-    file = File('.txt')
+    file = File('Thompson2.txt')
     file.read()
 
     quintupla = Quintupla(file.getContent)

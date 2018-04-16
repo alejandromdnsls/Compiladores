@@ -75,17 +75,9 @@ class AfnE:
 
     def imprimir_camino(self, path):
         path_str = self.quintupla.getS[0]
+        #longitud = []
         for path in self.allPath:
             path.pop()
             path.insert(0, path_str)
+            #print(len(path))
             print(path)
-
-            """"i = 1
-            for state in path:
-                if i == len(path):
-                    path_str=path_str+'q'+state
-                else:
-                    path_str=path_str+'q'+state+'->'
-                i += 1"""
-
-        #print("Camino: {}".format(path_str))
