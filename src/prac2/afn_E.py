@@ -7,7 +7,7 @@ from STRING.String import *
 from AFNE.AfnE import *
 
 def main():
-    file = File('0.txt')
+    file = File('Thompson2.txt')
     file.read()
 
     quintupla = Quintupla(file.getContent)
@@ -31,6 +31,17 @@ def main():
             str_toval = input("Ingresa una cadena que pertenezca al alfabeto: ")
             string.setString(str_toval)
 
+    afn_e = AfnE(file.getContent)
+
+    camino = ""
+
+    flag = afn_e.recorrer(string.getString, afn_e.start_state()[0], camino)
+
+    if afn_e.ask_strVal(flag):
+        print("Cadena válida en: ")
+        afn_e.imprimir_camino(camino)
+    else:
+        print("Cadena no válida")
 
 if __name__ == '__main__':
     main()
