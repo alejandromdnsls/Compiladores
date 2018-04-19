@@ -26,7 +26,6 @@ class Quintupla:
 
 class AFD:
     c_e = []
-    mover = []
 
 
     def __init__(self, content):
@@ -44,6 +43,10 @@ class AFD:
     def getMover(self):
         return self.mover
 
+    def inicializar_ce(self, states):
+        for state in states:
+            self.c_e.append(state)
+
     def C_E(self,state_now):
         statesE = []
         for line in self.quintupla.getDelta:
@@ -53,13 +56,20 @@ class AFD:
             self.c_e.append(stateE)
             self.C_E(stateE)
 
-    def MOVER(self):
-        for car in self.quintupla.getSigma:
-            for state in self.c_e:
-                for line in self.quintupla.getDelta:
-                    if state == line[0] and car == line[1]:
-                        self.mover.append(line[2])
+    def MOVER(self, conjunto, simbolo):
+        mover_states = []
+        for state in conjunto:
+            for line in self.quintupla.getDelta:
+                if state == line[0] and simbolo == line[1]:
+                    mover_states.append(line[2])
+        return mover_states
 
-
-    def ir_a(self):
-        pass
+    def IR_A(self, conjunto, simbolo):
+        print(conjunto)
+        print(simbolo)
+        states = self.MOVER(conjunto, simbolo)
+        self.c_e.clear()
+        self.inicializar_ce(states)
+        for state in states:
+            self.C_E(state)
+        return self.c_e
