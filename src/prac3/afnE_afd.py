@@ -15,12 +15,14 @@ def main():
 
     quintupla = Quintupla(file.getContent)
 
-    afd.inicializar_ce(quintupla.getS)
-    
-    afd.C_E(quintupla.getS[0])
+    afd.inicializar_ce(quintupla.getS[0])
 
-    aux = afd.IR_A(afd.getC_E, quintupla.getSigma[0])
+    afd.c_e(quintupla.getS[0])
+
+    aux = afd.ir_a(afd.getC_E, quintupla.getSigma[1])
+
     print(aux)
+
 
 
 if __name__ == '__main__':

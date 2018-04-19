@@ -25,38 +25,28 @@ class Quintupla:
         return self.content[4:]
 
 class AFD:
-    c_e = []
-
+    alcanzables_e = []
 
     def __init__(self, content):
         self.quintupla = Quintupla(content)
 
-    def start_state(self):
-        for state in self.quintupla.getS:
-            return state
-
     @property
     def getC_E(self):
-        return self.c_e
+        return self.alcanzables_e
 
-    @property
-    def getMover(self):
-        return self.mover
+    def inicializar_ce(self, state):
+        self.alcanzables_e.append(state)
 
-    def inicializar_ce(self, states):
-        for state in states:
-            self.c_e.append(state)
-
-    def C_E(self,state_now):
+    def c_e(self,state_now):
         statesE = []
         for line in self.quintupla.getDelta:
             if (state_now == line[0]) and (line[1] == Epsilon):
                 statesE.append(line[2])
         for stateE in statesE:
-            self.c_e.append(stateE)
-            self.C_E(stateE)
+            self.alcanzables_e.append(stateE)
+            self.c_e(stateE)
 
-    def MOVER(self, conjunto, simbolo):
+    def mover(self, conjunto, simbolo):
         mover_states = []
         for state in conjunto:
             for line in self.quintupla.getDelta:
@@ -64,12 +54,10 @@ class AFD:
                     mover_states.append(line[2])
         return mover_states
 
-    def IR_A(self, conjunto, simbolo):
-        print(conjunto)
-        print(simbolo)
-        states = self.MOVER(conjunto, simbolo)
-        self.c_e.clear()
-        self.inicializar_ce(states)
+    def ir_a(self, conjunto, simbolo):
+        states = self.mover(conjunto, simbolo)
+        self.alcanzables_e.clear()
         for state in states:
-            self.C_E(state)
-        return self.c_e
+            self.inicializar_ce(state)
+            self.c_e(state)
+        return self.alcanzables_e
