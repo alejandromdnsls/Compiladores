@@ -24,23 +24,28 @@ class Quintupla:
     def getDelta(self):
         return self.content[4:]
 
-class AFD:
+class Algoritmo:
     alcanzables_e = []
-
+    
     def __init__(self, content):
         self.quintupla = Quintupla(content)
 
     @property
-    def getC_E(self):
+    def getInicial(self):
+        for inicial in self.quintupla.getS:
+            return inicial
+
+    @property
+    def getAlcanzables(self):
         return self.alcanzables_e
 
     def inicializar_ce(self, state):
         self.alcanzables_e.append(state)
 
-    def c_e(self,state_now):
+    def c_e(self,now_state):
         statesE = []
         for line in self.quintupla.getDelta:
-            if (state_now == line[0]) and (line[1] == Epsilon):
+            if (now_state == line[0]) and (line[1] == Epsilon):
                 statesE.append(line[2])
         for stateE in statesE:
             self.alcanzables_e.append(stateE)
@@ -56,8 +61,7 @@ class AFD:
 
     def ir_a(self, conjunto, simbolo):
         states = self.mover(conjunto, simbolo)
-        self.alcanzables_e.clear()
+        self.alcanzables_e  = []
         for state in states:
             self.inicializar_ce(state)
             self.c_e(state)
-        return self.alcanzables_e
