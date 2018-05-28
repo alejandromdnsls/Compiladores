@@ -483,7 +483,7 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "lexico.l"
 #line 2 "lexico.l"
-
+#include "sintactico.tab.h" /* generador automaticamente por bison */
 /* CAD \"[a-zA-Z0-9\\\@\#\+\-\/\(\)]+\" */
 #line 489 "lex.yy.c"
 
@@ -757,84 +757,93 @@ case 1:
 YY_RULE_SETUP
 #line 15 "lexico.l"
 {
-                  printf("Numero entero\n");
+                  printf("Numero entero %s\n", yytext);
+                  yylval.entero = atoi(yytext);
+                  printf("%d\n", ENTERO);
+                  return (ENTERO);
                   }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 19 "lexico.l"
+#line 22 "lexico.l"
 {
-                  printf("Numero real\n");
+                  printf("Numero real %s\n", yytext);
+                  yylval.flotante = atof(yytext);
+                  return(REAL);
                   }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 23 "lexico.l"
+#line 28 "lexico.l"
 {
-                  printf("Operador\n");
+                  printf("Operador %s %zu\n", yytext, yyleng);
+                  printf("%d\n", yytext[0]);
+                  return (yytext[0]);
                   }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 27 "lexico.l"
+#line 34 "lexico.l"
 {
-                  printf("Cadena\n");
+                  printf("Cadena %s %zu\n", yytext, yyleng);
                   }
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 31 "lexico.l"
+#line 38 "lexico.l"
 {
-                  printf("Salto de linea\n");
+                  printf("Salto de linea %s\n", yytext);
+                  return (yytext[0]);
                   }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 35 "lexico.l"
+#line 43 "lexico.l"
 {
-                  printf("Potencia\n");
+                  printf("Potencia %s\n", yytext);
+                  return (POW);
                   }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 39 "lexico.l"
+#line 48 "lexico.l"
 {
-                  printf("Tipo de dato int\n");
+                  printf("Tipo de dato %s\n", yytext);
                   }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 43 "lexico.l"
+#line 52 "lexico.l"
 {
-                  printf("Tipo de dato double\n");
+                  printf("Tipo de dato %s\n", yytext);
                   }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 47 "lexico.l"
+#line 56 "lexico.l"
 {
-                  printf("Tipo de dato string\n");
+                  printf("Tipo de dato %s\n", yytext);
                   }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 51 "lexico.l"
+#line 60 "lexico.l"
 {
-                  printf("Identificador\n");
+                  printf("Identificador %s\n", yytext);
                   }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 57 "lexico.l"
+#line 64 "lexico.l"
 ;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 58 "lexico.l"
+#line 65 "lexico.l"
 ECHO;
 	YY_BREAK
-#line 838 "lex.yy.c"
+#line 847 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1831,7 +1840,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 58 "lexico.l"
+#line 65 "lexico.l"
 
 
 
