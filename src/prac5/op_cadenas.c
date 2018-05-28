@@ -1,9 +1,8 @@
+//Librerias
 #include <stdio.h>
+#include "op_cadenas.h"
 
-int len_cadena(char*);
-char* concatenar(char*, char*);
-char* resta(char*, char*);
-
+/*
 int main(){
   char* cad1 = "simon ";
   char* cad2 = "adios";
@@ -14,7 +13,7 @@ int main(){
   printf("%s\n", concat);
 
   return 0;
-}
+}*/
 
 int len_cadena(char* cad){
   int i = 0;
@@ -40,6 +39,7 @@ char* concatenar(char* cad1, char* cad2){
   return cadena;
 }
 
+/*
 char* resta(char* cad1, char* cad2){
   char* cadena;
   len_cadena_r = len_cadena(cad1);
@@ -50,4 +50,4 @@ char* resta(char* cad1, char* cad2){
   }
 
   return cadena;
-}
+}*/

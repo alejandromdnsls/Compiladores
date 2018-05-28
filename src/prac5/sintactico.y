@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>
 #include <math.h>
+#include "op_cadenas.h"
 int yylex(void);
 void yyerror(char *);
 %}
@@ -62,7 +63,10 @@ exp_f:  REAL { $$ = $1; }
 ;
 
 exp_c:  CADENA  { $$ = $1; }
-      | 
+      | exp_c '+' exp_c { char* aux;
+                          aux = concatenar ($1, $3);
+                          $$ = aux;
+                        }
 ;
 
 %%
