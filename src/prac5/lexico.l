@@ -32,9 +32,20 @@ ID [a-zA-Z][a-zA-Z0-9]*"_"?[a-zA-Z0-9]*
                   }
 
 {CAD}             {
-                  printf("Cadena %s %zu\n", yytext, yyleng);
-                  yyval.str = yytext;
-                  return (CADENA)
+                  printf("Cadena: %s %zu\n", yytext, yyleng);
+                  char * aux;
+                  int i=0,j=0,k=0;
+                  while(yytext[i]){i++;}
+                  printf("el tamaño de la cadena %s es: %d\n",yytext,i);
+                  aux = malloc (i-1);
+                  for(j=0,k=1;j<(i-2);j++,k++){
+                          aux[j]=yytext[k];
+                  }
+                  aux[j+1]='\0';
+                  printf("aux =%s\n",aux);
+                  yylval.str = aux;
+                  printf("%s\n", yylval.str);
+                  return (CADENA);
                   }
 
 "\n"              {

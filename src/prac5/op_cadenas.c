@@ -1,5 +1,6 @@
 //Librerias
 #include <stdio.h>
+#include <stdlib.h>
 #include "op_cadenas.h"
 
 /*
@@ -23,6 +24,7 @@ int len_cadena(char* cad){
 
 char* concatenar(char* cad1, char* cad2){
   char* cadena;
+  cadena = malloc(len_cadena(cad1)+1);
   int len_cadena1 = len_cadena(cad1);
   int len_cadena2 = len_cadena(cad2);
   int i, j;

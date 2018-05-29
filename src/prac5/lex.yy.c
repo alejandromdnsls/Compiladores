@@ -785,13 +785,26 @@ case 4:
 YY_RULE_SETUP
 #line 34 "lexico.l"
 {
-                  printf("Cadena %s %zu\n", yytext, yyleng);
+                  printf("Cadena: %s %zu\n", yytext, yyleng);
+                  char * aux;
+                  int i=0,j=0,k=0;
+                  while(yytext[i]){i++;}
+                  printf("el tamaño de la cadena %s es: %d\n",yytext,i);
+                  aux = malloc (i-1);
+                  for(j=0,k=1;j<(i-2);j++,k++){
+                          aux[j]=yytext[k];
+                  }
+                  aux[j+1]='\0';
+                  printf("aux =%s\n",aux);
+                  yylval.str = aux;
+                  printf("%s\n", yylval.str);
+                  return (CADENA);
                   }
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 38 "lexico.l"
+#line 51 "lexico.l"
 {
                   printf("Salto de linea %s\n", yytext);
                   return (yytext[0]);
@@ -799,7 +812,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 43 "lexico.l"
+#line 56 "lexico.l"
 {
                   printf("Potencia %s\n", yytext);
                   return (POW);
@@ -807,43 +820,43 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 48 "lexico.l"
+#line 61 "lexico.l"
 {
                   printf("Tipo de dato %s\n", yytext);
                   }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 52 "lexico.l"
+#line 65 "lexico.l"
 {
                   printf("Tipo de dato %s\n", yytext);
                   }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 56 "lexico.l"
+#line 69 "lexico.l"
 {
                   printf("Tipo de dato %s\n", yytext);
                   }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 60 "lexico.l"
+#line 73 "lexico.l"
 {
                   printf("Identificador %s\n", yytext);
                   }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 64 "lexico.l"
+#line 77 "lexico.l"
 ;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 65 "lexico.l"
+#line 78 "lexico.l"
 ECHO;
 	YY_BREAK
-#line 847 "lex.yy.c"
+#line 860 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1840,7 +1853,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 65 "lexico.l"
+#line 78 "lexico.l"
 
 
 

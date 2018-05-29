@@ -34,9 +34,9 @@ input:    /* cadena vacía */
 ;
 
 line:     '\n'
-        | exp_e '\n' { printf("\tresultado %d\n", $1); }
-        | exp_f '\n' { printf("\tresultado %.2f\n", $1); }
-        | exp_c '\n' { printf("\tresultaod %s\n", $1); }
+        | exp_e '\n' { printf("\tresultado: %d\n", $1); }
+        | exp_f '\n' { printf("\tresultado: %.2f\n", $1); }
+        | exp_c '\n' { printf("\tresultado: %s\n", $1); }
 ;
 
 exp_e:  ENTERO { $$ = $1; }
@@ -64,7 +64,7 @@ exp_f:  REAL { $$ = $1; }
 
 exp_c:  CADENA  { $$ = $1; }
       | exp_c '+' exp_c { char* aux;
-                          aux = concatenar ($1, $3);
+                          aux = concatenar($1, $3);
                           $$ = aux;
                         }
 ;
