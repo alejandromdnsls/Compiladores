@@ -64,7 +64,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 13 "sintactico.y"
+#line 14 "sintactico.y"
 {  /* especifica la colección completa de tipo de datos posibles */
   int entero;
   double flotante;

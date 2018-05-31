@@ -2,9 +2,10 @@
 #include <stdio.h>
 #include <math.h>
 #include "op_cadenas.h"
-#include "lista.h"
+#include "TADListaSL.h"
 int yylex(void);
 void yyerror(char *);
+void ImprimeLista(lista *l);
 lista ts;
 %}
 
@@ -72,7 +73,7 @@ exp_f:  REAL { $$ = $1; }
 ;
 
 exp_c:  CADENA  { $$ = $1; }
-      | exp_c '+' exp_c {
+      | exp_c '+' exp_c ';'{
                           printf( "%s\n", $3);
                           char* aux;
                           aux = concatenar($1, $3);
@@ -90,11 +91,11 @@ decl: INT ID ';' {  elemento e;
                       printf("\n--->ERROR! Ya ha sido declarada %s con int\n", e.name);
                     }
                     else{
-                      Insert(&ts, e);
+                      Add(&ts, e);
                       printf("\nSe agregó correctamente\n");
                     }
 
-                    ImprimeTS(&ts);
+                    ImprimeLista(&ts);
 
                   }
     | INT ID '=' exp_e ';' {  elemento e;
@@ -105,10 +106,10 @@ decl: INT ID ';' {  elemento e;
                                 printf("\n--->ERROR! Ya ha sido declarada %s con int\n", e.name);
                               }
                               else{
-                                Insert(&ts, e);
+                                Add(&ts, e);
                                 printf("\nSe agregó correctamente\n");
                               }
-                              ImprimeTS(&ts);
+                              ImprimeLista(&ts);
                             }
     | DOUBLE ID ';' {
                       elemento e;
@@ -119,10 +120,11 @@ decl: INT ID ';' {  elemento e;
                         printf("\n--->ERROR! Ya ha sido declarada %s con double\n", e.name);
                       }
                       else{
-                        Insert(&ts, e);
+                        Add(&ts, e);
                         printf("\nSe agregó correctamente\n");
                       }
-                      ImprimeTS(&ts);
+
+                      ImprimeLista(&ts);
                     }
     | DOUBLE ID '=' exp_f ';' { elemento e;
                                 e.name = $2;
@@ -132,35 +134,10 @@ decl: INT ID ';' {  elemento e;
                                   printf("\n--->ERROR! Ya ha sido declarada %s con double\n", e.name);
                                 }
                                 else{
-                                  Insert(&ts, e);
+                                  Add(&ts, e);
                                   printf("\nSe agregó correctamente\n");
                                 }
-                                ImprimeTS(&ts);
-                              }
-   | STRING ID '=' exp_c ';' { elemento e;
-                                e.name = $2;
-                                e.tipo = 3;
-                                e.valor.valor3 = $4;
-                                if(Buscar(&ts, e)){
-                                  printf("\n--->ERROR! Ya ha sido declarada %s con double\n", e.name);
-                                }
-                                else{
-                                  Insert(&ts, e);
-                                  printf("\nSe agregó correctamente\n");
-                                }
-                                ImprimeTS(&ts);
-                              }
-    | STRING ID ';' { elemento e;
-                                e.name = $2;
-                                e.tipo = 3;
-                                if(Buscar(&ts, e)){
-                                  printf("\n--->ERROR! Ya ha sido declarada %s con double\n", e.name);
-                                }
-                                else{
-                                  Insert(&ts, e);
-                                  printf("\nSe agregó correctamente\n");
-                                }
-                                ImprimeTS(&ts);
+                                ImprimeLista(&ts);
                               }
 
 ;
@@ -170,11 +147,43 @@ decl: INT ID ';' {  elemento e;
 
 %%
 
+void ImprimeLista(lista *l)
+{
+	posicion p;
+	elemento e;
+	int i;
+
+	//Recorrer e imprimir los elementos mientras se tenga una posición valida
+	p=First(l);		//Iniciamos por el primero de la lista
+  printf("\n******************* Tabla de Simbolos ******************\n");
+	//Mientras la posición sea valida
+	for(i=1;ValidatePosition(l,p);i++)
+	{
+		e=Position(l,p);
+
+		if(e.tipo == 1){
+			printf("\nElemento %d\n",i);
+			printf("Nombre: %s, Tipo: %d, Valor: %d\n", e.name, e.tipo, e.valor.valor1);
+		}
+		else if(e.tipo == 2){
+			printf("\nElemento %d\n",i);
+			printf("Nombre: %s, Tipo: %d, Valor: %.2f\n", e.name, e.tipo, e.valor.valor2);
+		}
+		else if(e.tipo == 3){
+			printf("\nElemento %d\n",i);
+			printf("Nombre: %s, Tipo: %d, Valor: %s\n", e.name, e.tipo, e.valor.valor3);
+		}
+		p=Following(l,p);
+	}
+  VerLigasLista(&ts);
+	return;
+}
+
 int main(){
   Initialize(&ts);
   yyparse();
   Destroy(&ts);
-  ImprimeTS(&ts);
+  ImprimeLista(&ts);
   return 0;
 }
 
