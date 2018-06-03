@@ -43,10 +43,8 @@
      REAL = 259,
      CADENA = 260,
      ID = 261,
-     POW = 262,
-     INT = 263,
-     DOUBLE = 264,
-     STRING = 265
+     TIPO = 262,
+     POW = 263
    };
 #endif
 /* Tokens.  */
@@ -54,17 +52,15 @@
 #define REAL 259
 #define CADENA 260
 #define ID 261
-#define POW 262
-#define INT 263
-#define DOUBLE 264
-#define STRING 265
+#define TIPO 262
+#define POW 263
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 13 "sintactico.y"
+#line 14 "sintactico.y"
 {  /* especifica la colección completa de tipo de datos posibles */
   int entero;
   double flotante;
@@ -72,7 +68,7 @@ typedef union YYSTYPE
   /*Valor* valor;*/
 }
 /* Line 1529 of yacc.c.  */
-#line 76 "sintactico.tab.h"
+#line 72 "sintactico.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

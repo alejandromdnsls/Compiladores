@@ -1,13 +1,13 @@
 %{
-#include "sintactico.tab.h" /* generador automaticamente por bison */
+#include "sintactico.tab.h" /* generado automaticamente por bison */
 %}
 
 NUM [0-9]
 ENTERO {NUM}+
 REAL {NUM}*"."{NUM}+
 LETRA [a-zA-Z]
+TIPO int|double|string
 ID [a-zA-Z][a-zA-Z0-9]*"_"?[a-zA-Z0-9]*
-/*ID {LETRA}+{LETRA}* */
 CAD "\""[^'"\n]+"\""
 
 
@@ -26,7 +26,7 @@ CAD "\""[^'"\n]+"\""
                   }
 
 {CAD}             {
-                  printf("Cadena: %s %zu\n", yytext, yyleng);
+                  printf("Cadena: %s\n", yytext);
                   char * aux;
                   int i=0,j=0,k=0;
                   while(yytext[i]){i++;}
@@ -36,7 +36,7 @@ CAD "\""[^'"\n]+"\""
                           aux[j]=yytext[k];
                   }
                   aux[j+1]='\0';
-                  printf("aux =%s\n",aux);
+                  //printf("aux =%s\n",aux);
                   yylval.str = aux;
                   //printf("%s\n", yylval.str);
                   return (CADENA);
@@ -47,7 +47,7 @@ CAD "\""[^'"\n]+"\""
                   return (POW);
                   }
 
-"int"             {
+{TIPO}            {
                   printf("Tipo de dato: %s\n", yytext);
                   char * aux;
                   int i=0,j=0,k=0;
@@ -61,41 +61,7 @@ CAD "\""[^'"\n]+"\""
                   //printf("aux =%s\n",aux);
                   yylval.str = aux;
                   //printf("%s\n", yylval.str);
-                  return (INT);
-                  }
-
-"double"          {
-                  printf("Tipo de dato: %s\n", yytext);
-                  char * aux;
-                  int i=0,j=0,k=0;
-                  while(yytext[i]){i++;}
-                  //printf("el tamaño de la cadena %s es: %d\n",yytext,i);
-                  aux = malloc (i+1);
-                  for(j=0,k=0;j<i;j++,k++){
-                          aux[j]=yytext[k];
-                  }
-                  aux[j+1]='\0';
-                  //printf("aux =%s\n",aux);
-                  yylval.str = aux;
-                  //printf("%s\n", yylval.str);
-                  return (DOUBLE);
-                  }
-
-"string"          {
-                  printf("Tipo de dato: %s\n", yytext);
-                  char * aux;
-                  int i=0,j=0,k=0;
-                  while(yytext[i]){i++;}
-                  //printf("el tamaño de la cadena %s es: %d\n",yytext,i);
-                  aux = malloc (i+1);
-                  for(j=0,k=0;j<i;j++,k++){
-                          aux[j]=yytext[k];
-                  }
-                  aux[j+1]='\0';
-                  //printf("aux =%s\n",aux);
-                  yylval.str = aux;
-                  //printf("%s\n", yylval.str);
-                  return (STRING);
+                  return (TIPO);
                   }
 
 {ID}              {
@@ -106,7 +72,7 @@ CAD "\""[^'"\n]+"\""
                   //printf("el tamaño de la cadena %s es: %d\n",yytext,i);
                   aux = malloc (i+1);
                   for(j=0,k=0;j<i;j++,k++){
-                          aux[j]=yytext[k];
+                    aux[j]=yytext[k];
                   }
                   aux[j+1]='\0';
                   //printf("aux =%s\n",aux);
@@ -114,6 +80,7 @@ CAD "\""[^'"\n]+"\""
                   //printf("%s\n", yylval.str);
                   return (ID);
                   }
+
 
 "+"               {
                   printf("Operador mas: %s\n", yytext);
@@ -142,6 +109,11 @@ CAD "\""[^'"\n]+"\""
 
 ";"               {
                   printf("Fin: %s\n", yytext);
+                  return (yytext[0]);
+                  }
+
+" "               {
+                  printf("Espacio %s\n", yytext);
                   return (yytext[0]);
                   }
 
