@@ -11,7 +11,7 @@ lista ts;
 
 /* Declaraciones de BISON */
 
-%union{  /* especifica la colección completa de tipo de datos posibles */
+%union{  /* especifica la colección completa de tipo de datos pibles */
   int entero;
   double flotante;
   char* str;
@@ -43,6 +43,7 @@ line:     '\n'
         | exp_f '\n' { printf("\tresultado: %.2f\n", $1); }
         | exp_c '\n' { printf("\tresultado: %s\n", $1); }
         | decl '\n'
+        | asig '\n'
 ;
 
 exp_e:  ENTERO { $$ = $1; printf("%d\n", $1); }
@@ -97,7 +98,7 @@ decl:  TIPO ' ' ID ';' {
                       e.tipo = tipo;
 
                       if(Buscar(&ts, e)){
-                        printf("\n\t-->ERROR! ya ha sido declarada %s con %s\n", $3, $1);
+                        printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $3);
                       }
                       else{
                         Insert(&ts, e);
@@ -114,7 +115,7 @@ decl:  TIPO ' ' ID ';' {
                                           e.tipo = 1;
                                           e.valor.valor1 = $5;
                                           if(Buscar(&ts, e)){
-                                            printf("\n\t-->ERROR! ya ha sido declarada %s con %s\n", $3, $1);
+                                            printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $3);
                                           }
                                           else{
                                             Insert(&ts, e);
@@ -127,7 +128,7 @@ decl:  TIPO ' ' ID ';' {
                                           e.tipo = 2;
                                           e.valor.valor2 = $5;
                                           if(Buscar(&ts, e)){
-                                            printf("\n\t-->ERROR! ya ha sido declarada %s con %s\n", $3, $1);
+                                            printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $3);
                                           }
                                           else{
                                             Insert(&ts, e);
@@ -148,7 +149,7 @@ decl:  TIPO ' ' ID ';' {
                                           e.tipo = 1;
                                           e.valor.valor1 = $5;
                                           if(Buscar(&ts, e)){
-                                            printf("\n\t-->ERROR! ya ha sido declarada %s con %s\n", $3, $1);
+                                            printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $3);
                                           }
                                           else{
                                             Insert(&ts, e);
@@ -161,7 +162,7 @@ decl:  TIPO ' ' ID ';' {
                                           e.tipo = 2;
                                           e.valor.valor2 = $5;
                                           if(Buscar(&ts, e)){
-                                            printf("\n\t-->ERROR! ya ha sido declarada %s con %s\n", $3, $1);
+                                            printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $3);
                                           }
                                           else{
                                             Insert(&ts, e);
@@ -188,7 +189,7 @@ decl:  TIPO ' ' ID ';' {
                                           e.tipo = 3;
                                           e.valor.valor3 = $5;
                                           if(Buscar(&ts, e)){
-                                            printf("\n\t-->ERROR! ya ha sido declarada %s con %s\n", $3, $1);
+                                            printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $3);
                                           }
                                           else{
                                             Insert(&ts, e);
@@ -197,6 +198,97 @@ decl:  TIPO ' ' ID ';' {
                                           ImprimeTS(&ts);
                                         }
                                       }
+                                      
+asig: ID '=' exp_e ';'  {
+                          elemento e;
+                          posicion p;
+                          elemento * e_ts;
+
+                          e.name = $1;
+                          p = Search(&ts,e);
+
+                          if(p != NULL){
+                            printf("Posicion en la que encontre el elemento %p\n", p);
+                            e_ts = getElement(&ts, p);
+                            printf("Elemento apuntado y guardado: %p\n", e_ts);
+
+                            if(e_ts->tipo == 1){
+                              e_ts->valor.valor1=$3;
+                              printf("\n\tAsignacion correcta\n");
+                            }
+                            else if(e_ts->tipo == 2){
+                              e_ts->valor.valor2=$3;
+                              printf("\n\tAsignacion correcta\n");
+                            }
+                            else if(e_ts->tipo == 3){
+                              printf("\n\t--->ERROR! Incompatible types in assigment\n");
+                            }
+                          }
+                          else{
+                            printf("\n\t-->ERROR! asignacion primero tiene que ser declarado %s\n", e.name);
+                          }
+                          ImprimeTS(&ts);
+                        }
+
+      | ID '=' exp_f ';'  {
+                            elemento e;
+                            posicion p;
+                            elemento * e_ts;
+
+                            e.name = $1;
+                            p = Search(&ts,e);
+
+                            if(p != NULL){
+                              printf("Posicion en la que encontre el elemento %p\n", p);
+                              e_ts = getElement(&ts, p);
+                              printf("Elemento apuntado y guardado: %p\n", e_ts);
+
+                              if(e_ts->tipo == 1){
+                                e_ts->valor.valor1=$3;
+                                printf("\n\tAsignacion correcta\n");
+                              }
+                              else if(e_ts->tipo == 2){
+                                e_ts->valor.valor2=$3;
+                                printf("\n\tAsignacion correcta\n");
+                              }
+                              else if(e_ts->tipo == 3){
+                                printf("\n\t--->ERROR! Incompatible types in assigment\n");
+                              }
+                            }
+                            else{
+                              printf("\n\t-->ERROR! asignacion primero tiene que ser declarado %s\n", e.name);
+                            }
+                            ImprimeTS(&ts);
+                          }
+      | ID '=' exp_c ';'  {
+                            elemento e;
+                            posicion p;
+                            elemento * e_ts;
+
+                            e.name = $1;
+                            p = Search(&ts,e);
+
+                            if(p != NULL){
+                              printf("Posicion en la que encontre el elemento %p\n", p);
+                              e_ts = getElement(&ts, p);
+                              printf("Elemento apuntado y guardado: %p\n", e_ts);
+
+                              if(e_ts->tipo == 1){
+                                printf("\n\t--->ERROR! Incompatible types in assigment\n");
+                              }
+                              else if(e_ts->tipo == 2){
+                                printf("\n\t--->ERROR! Incompatible types in assigment\n");
+                              }
+                              else if(e_ts->tipo == 3){
+                                e_ts->valor.valor3=$3;
+                                printf("\n\tAsignacion correcta\n");
+                              }
+                            }
+                            else{
+                              printf("\n\t-->ERROR! asignacion primero tiene que ser declarado %s\n", e.name);
+                            }
+                            ImprimeTS(&ts);
+                          }
 
 
 ;
