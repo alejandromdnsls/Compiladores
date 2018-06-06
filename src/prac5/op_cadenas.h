@@ -14,4 +14,6 @@ int len_cadena(char*);
 
 char* concatenar(char*, char*);
 
+char*resta(char*,char*);
+
 #endif    // OP_CADENAS_H

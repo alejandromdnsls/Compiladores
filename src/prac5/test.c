@@ -21,7 +21,23 @@ void random_string(char * string, unsigned length)
 int main(void)
 {
   char s[31];
-  random_string(s, 30);
+  int a;
+  int b;
+  int * ap;
+  int *otro;
+  a=5;
+  ap = &a;
+  otro = &b;
+  *otro=*ap;
+  printf("%p\n", &a);
+  printf("%p\n", ap);
+  printf("%d\n", *ap);
+  printf("%p\n", otro);
+  printf("%p\n", &b);
+  printf("%d\n", b);
+
+
+
   printf("%s\n", s);
   return 0;
 }

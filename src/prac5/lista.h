@@ -47,6 +47,7 @@ boolean Buscar(lista *l, elemento e);
 posicion Search(lista *l, elemento e);
 
 elemento*getElement(lista *l, posicion p);
+elemento obtenerElemento(lista *l, posicion p);
 
 boolean Empty(lista *l);
 

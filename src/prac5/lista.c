@@ -52,7 +52,7 @@ posicion Search(lista *l, elemento e)
 	{
 		if(strcmp(aux->e.name, e.name)==0)
 		{
-			printf("Posicion que regreso despues de encontrar var: %p\n", aux);
+			//printf("Posicion que regreso despues de encontrar var: %p\n", aux);
 			return aux;
 		}
 		aux=aux->siguiente;
@@ -62,30 +62,39 @@ posicion Search(lista *l, elemento e)
 
 elemento*getElement(lista *l, posicion p)
 {
-	elemento*aux_e;
+	posicion aux=l->frente;
+	//printf("Posicion en la que empiezo: %p\n", aux);
+	//printf("Posicion que deseo encontrar: %p\n", p);
+
+	while(aux != NULL){
+		if(aux == p){
+			//printf("Entre al ciclo por encontrar la posicion\n");
+			//printf("Posicion en la que estoy en la lista: %p\n", aux);
+			//printf("Posicion que buscaba: %p\n", p);
+			//printf("Elemento que regreso g%p\n", &aux->e);
+			return &aux->e;
+		}
+		aux = aux->siguiente;
+	}
+}
+
+elemento obtenerElemento(lista *l, posicion p)
+{
 	posicion aux=l->frente;
 	printf("Posicion en la que empiezo: %p\n", aux);
 	printf("Posicion que deseo encontrar: %p\n", p);
 
 	while(aux != NULL){
 		if(aux == p){
-			printf("Entre al ciclo por encontrar la posicion\n");
-			printf("Posicion en la que estoy en la lista: %p\n", aux);
-			printf("Posicion que buscaba: %p\n", p);
-			printf("Elemento que regreso g%p\n", &aux->e);
-			//aux_e=&aux->e;
-			//printf("este elm regreso%p\n", aux_e);
-			return &aux->e;
-			printf("sigo\n");
+			//printf("Entre al ciclo por encontrar la posicion\n");
+			//printf("Posicion en la que estoy en la lista: %p\n", aux);
+			//printf("Posicion que buscaba: %p\n", p);
+			//printf("Elemento que regreso g%p\n", &aux->e);
+			return aux->e;
 		}
 		aux = aux->siguiente;
 	}
 }
-
-//boolean editElement(&ts, elemento e){
-
-//}
-
 
 boolean Empty (lista *l){
 	return (l->final==NULL&&l->frente==NULL&&l->tamanio==0) ? TRUE:FALSE;

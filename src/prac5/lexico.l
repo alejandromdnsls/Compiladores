@@ -1,4 +1,5 @@
 %{
+#include "lista.h"
 #include "sintactico.tab.h" /* generado automaticamente por bison */
 %}
 
@@ -102,23 +103,39 @@ CAD "\""[^'"\n]+"\""
                   return (yytext[0]);
                   }
 
+"%"               {
+                  printf("Operador modulo: %s\n", yytext);
+                  return (yytext[0]);
+                  }
+
 "="               {
                   printf("Asignacion: %s\n", yytext);
                   return (yytext[0]);
                   }
 
-";"               {
-                  printf("Fin: %s\n", yytext);
+"("               {
+                  printf("Parentesis abrir: %s\n", yytext);
                   return (yytext[0]);
                   }
 
-" "               {
-                  printf("Espacio %s\n", yytext);
+")"               {
+                  printf("Parentesis cerrado: %s\n", yytext);
                   return (yytext[0]);
                   }
+
+","               {
+                  printf("Coma: %s\n", yytext);
+                  return (yytext[0]);
+                  }
+
+";"               {
+                  printf("Fin expresión: %s\n", yytext);
+                  return (yytext[0]);
+                  }
+
 
 "\n"              {
-                  printf("Salto de linea %s\n", yytext);
+                  printf("\nSalto de linea %s\n", yytext);
                   return (yytext[0]);
                   }
 

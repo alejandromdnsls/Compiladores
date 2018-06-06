@@ -15,18 +15,20 @@ lista ts;
   int entero;
   double flotante;
   char* str;
-  /*Valor* valor;*/
+  Valor valor;
+  elemento elem;
 }
 
 %token <entero> ENTERO /* terminal, define el token y su tipo */
 %token <flotante> REAL
-%token <str> CADENA
-%token <str> ID TIPO
+%token <str> CADENA TIPO
+%token <str> ID
 %token POW
 %type <entero> exp_e /* no terminal */
 %type <flotante> exp_f
 %type <str> exp_c
-
+/*%type <valor> exp_v*/
+%type <elem> expVar
 %left '='
 %left '+''-'
 %left '*''/'
@@ -43,31 +45,43 @@ line:     '\n'
         | exp_f '\n' { printf("\tresultado: %.2f\n", $1); }
         | exp_c '\n' { printf("\tresultado: %s\n", $1); }
         | decl '\n'
-        | asig '\n'
+        //| asig '\n'
+        | expVar '\n' { printf("\tresultado: %f\n", $1.valor.valor2); }
 ;
 
 exp_e:  ENTERO { $$ = $1; printf("%d\n", $1); }
-        | '-' ENTERO { $$ = ($2)*(-1); }
+        | '-' exp_e { $$ = ($2)*(-1); }
+        | '+' exp_e { $$ = ($2)*(-1); }
         | exp_e '+' exp_e { $$ = $1 + $3; }
         | exp_e '-' exp_e { $$ = $1 - $3; }
         | exp_e '*' exp_e { $$ = $1 * $3; }
         | exp_e '/' exp_e { $$ = $1 / $3; }
-        | POW '(' exp_e ',' exp_e ')' ';' { $$ = pow($3,$5); }
+        //| exp_e '%' exp_e { $$ = $1 % $3; }
+        | POW '(' exp_e ',' exp_e ')' { $$ = pow($3,$5); }
 ;
 
 exp_f:  REAL { $$ = $1; printf("%f\n", $1); }
+        | '-' exp_f { $$ = ($2)*(-1); }
+        | '+' exp_f { $$ = ($2)*(-1); }
         | exp_f '+' exp_f { $$ = $1 + $3; }
         | exp_f '-' exp_f { $$ = $1 - $3; }
         | exp_f '*' exp_f { $$ = $1 * $3; }
         | exp_f '/' exp_f { $$ = $1 / $3; }
+        //| exp_f '%' exp_f { $$ = $1 % $3; }
+        | POW '(' exp_f ',' exp_f ')' { $$ = pow($3,$5); }
         | exp_e '+' exp_f { $$ = $1 + $3; }
         | exp_e '-' exp_f { $$ = $1 - $3; }
         | exp_e '*' exp_f { $$ = $1 * $3; }
         | exp_e '/' exp_f { $$ = $1 / $3; }
+        //| exp_e '%' exp_f { $$ = $1 % $3; }
+        | POW '(' exp_e ',' exp_f ')' { $$ = pow($3,$5); }
         | exp_f '+' exp_e { $$ = $1 + $3; }
         | exp_f '-' exp_e { $$ = $1 - $3; }
         | exp_f '*' exp_e { $$ = $1 * $3; }
         | exp_f '/' exp_e { $$ = $1 / $3; }
+        //| exp_f '%' exp_e { $$ = $1 % $3; }
+        | POW '(' exp_f ',' exp_e ')' { $$ = pow($3,$5); }
+
 ;
 
 exp_c:  CADENA  { $$ = $1; printf("%s\n", $1)  }
@@ -77,10 +91,79 @@ exp_c:  CADENA  { $$ = $1; printf("%s\n", $1)  }
                           aux = concatenar($1, $3);
                           $$ = aux;
                         }
-;
+      | exp_c '-' exp_c {
+                          char* aux;
+                          aux = resta($1,$3);
+                          $$ = aux;
+                        }
+ ;
 
 
-decl:  TIPO ' ' ID ';' {
+
+expVar: ID  {
+              posicion p;
+              elemento e;
+              elemento * e_ts;
+              e.name = $1;
+              p = Search(&ts, e);
+              if(p!=NULL){
+                e_ts = getElement(&ts, p);
+                $$ = *e_ts;
+              }
+              else
+                printf("\n\t-->ERROR! no ha sido declarada previamente %s\n", $1);
+            }
+
+      | expVar '+' expVar {
+                            printf("$$.name: %s\n", $$.name);
+                            printf("$$.tipo: %d\n", $$.tipo);
+                            if($$.tipo == 1){
+                              $$.tipo = 2; //Se fuerza a ser de tipo double para no perder los decimales en la recursion
+                              if($1.tipo == 1 && $3.tipo==1)
+                                $$.valor.valor2 = $1.valor.valor1 + $3.valor.valor1;
+                              else if($1.tipo == 1 && $3.tipo == 2)
+                                $$.valor.valor2 = $1.valor.valor1 + $3.valor.valor2;
+                              else if($1.tipo == 2 && $3.tipo == 1)
+                                $$.valor.valor2 = $1.valor.valor2 + $3.valor.valor1;
+                              else if($1.tipo == 2 && $3.tipo == 2)
+                                $$.valor.valor2 = $1.valor.valor2 + $3.valor.valor2;
+
+                            }
+                            if($$.tipo ==2){
+                              if($1.tipo == 1 && $3.tipo==1)
+                                $$.valor.valor2 = $1.valor.valor1 + $3.valor.valor1;
+                              else if($1.tipo == 1 && $3.tipo == 2)
+                                $$.valor.valor2 = $1.valor.valor1 + $3.valor.valor2;
+                              else if($1.tipo == 2 && $3.tipo == 1)
+                                $$.valor.valor2 = $1.valor.valor2 + $3.valor.valor1;
+                              else if($1.tipo == 2 && $3.tipo == 2)
+                                $$.valor.valor2 = $1.valor.valor2 + $3.valor.valor2;
+
+
+                            }
+
+
+                            //$$.valor.valor2 = $1.valor.valor2 + $3.valor.valor2;
+                            printf("$$.name: %s\n", $$.name);
+                            printf("$$.tipo: %d\n", $$.tipo);
+                            printf("$$.valor: %f\n", $$.valor.valor2);
+
+                            /*if($1.tipo == 1 && $3.tipo == 1)
+                              $$.valor.valor1 = $1.valor.valor1 + $3.valor.valor1;
+                            else if($1.tipo == 1 && $3.tipo == 2)
+                              $$.valor.valor1 = $1.valor.valor1 + $3.valor.valor2;
+                            else if($1.tipo == 2 && $3.tipo == 1)
+                              $$.valor.valor2 = $1.valor.valor2 + $3.valor.valor1;
+                            else if($1.tipo == 2 && $3.tipo == 2)
+                              $$.valor.valor2 = $1.valor.valor2 + $3.valor.valor2;
+                            else if($1.tipo == 3 && $3.tipo == 3)
+                              $$.valor.valor3 = concatenar($1.valor.valor3, $3.valor.valor3);
+                            else{
+                              printf("\n\t-->ERROR Incompatible types\n");
+                            }*/
+                          }
+
+decl:  TIPO ID ';' {
                       elemento e;
                       int tipo;
 
@@ -94,11 +177,11 @@ decl:  TIPO ' ' ID ';' {
                         tipo = 3;
                       }
 
-                      e.name = $3;
+                      e.name = $2;
                       e.tipo = tipo;
 
                       if(Buscar(&ts, e)){
-                        printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $3);
+                        printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $2);
                       }
                       else{
                         Insert(&ts, e);
@@ -107,104 +190,170 @@ decl:  TIPO ' ' ID ';' {
                       ImprimeTS(&ts);
                     }
 
-        | TIPO ' ' ID '=' exp_e ';'   {
-                                        elemento e;
+        | TIPO ID '=' expVar ';'   {
+                                      elemento e;
+                                      posicion p_expVar;
 
+                                      p_expVar = Search(&ts, $4);
+
+                                      if(p_expVar != NULL){
                                         if(!strcmp($1, "int")){
-                                          e.name = $3;
+                                          e.name = $2;
                                           e.tipo = 1;
-                                          e.valor.valor1 = $5;
+                                          if($4.tipo == 1)
+                                            e.valor.valor1 = $4.valor.valor1;
+                                          else if($4.tipo == 2)
+                                            e.valor.valor1 = $4.valor.valor2;
+                                          else if($4.tipo == 3)
+                                            printf("\n\t---> ERROR! Incompatible types in assigment: %s is int and %s string", e.name, $4.name);
+
                                           if(Buscar(&ts, e)){
-                                            printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $3);
+                                            printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $2);
                                           }
                                           else{
                                             Insert(&ts, e);
                                             printf("\n\t Se agregó correctamente\n");
                                           }
-                                          ImprimeTS(&ts);
                                         }
-                                        else if(!strcmp($1, "double")){
-                                          e.name = $3;
+                                        if(!strcmp($1, "double")){
+                                          e.name = $2;
                                           e.tipo = 2;
-                                          e.valor.valor2 = $5;
+                                          if($4.tipo == 1)
+                                            e.valor.valor2 = $4.valor.valor1;
+                                          else if($4.tipo == 2)
+                                            e.valor.valor2 = $4.valor.valor2;
+                                          else if($4.tipo == 3)
+                                            printf("\n\t---> ERROR! Incompatible types in assigment: %s is double and %s string", e.name, $4.name);
+
                                           if(Buscar(&ts, e)){
-                                            printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $3);
+                                            printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $2);
                                           }
                                           else{
                                             Insert(&ts, e);
                                             printf("\n\t Se agregó correctamente\n");
                                           }
-                                          ImprimeTS(&ts);
                                         }
-                                        else if(!strcmp($1, "string")){
-                                          printf("\n\t--->ERROR! Incompatible types in assigment\n");
-                                        }
-                                      }
-
-        | TIPO ' ' ID '=' exp_f ';'   {
-                                        elemento e;
-
-                                        if(!strcmp($1, "int")){
-                                          e.name = $3;
-                                          e.tipo = 1;
-                                          e.valor.valor1 = $5;
-                                          if(Buscar(&ts, e)){
-                                            printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $3);
-                                          }
-                                          else{
-                                            Insert(&ts, e);
-                                            printf("\n\t Se agregó correctamente\n");
-                                          }
-                                          ImprimeTS(&ts);
-                                        }
-                                        else if(!strcmp($1, "double")){
-                                          e.name = $3;
-                                          e.tipo = 2;
-                                          e.valor.valor2 = $5;
-                                          if(Buscar(&ts, e)){
-                                            printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $3);
-                                          }
-                                          else{
-                                            Insert(&ts, e);
-                                            printf("\n\t Se agregó correctamente\n");
-                                          }
-                                          ImprimeTS(&ts);
-                                        }
-                                        else if(!strcmp($1, "string")){
-                                          printf("\n\t--->ERROR! Incompatible types in assigment\n");
-                                        }
-                                      }
-
-        | TIPO ' ' ID '=' exp_c ';'   {
-                                        elemento e;
-
-                                        if(!strcmp($1, "int")){
-                                          printf("\n\t--->ERROR! Incompatible types in assigment\n");
-                                        }
-                                        else if(!strcmp($1, "double")){
-                                          printf("\n\t--->ERROR! Incompatible types in assigment\n");
-                                        }
-                                        else if(!strcmp($1, "string")){
-                                          e.name = $3;
+                                        if(!strcmp($1, "string")){
+                                          e.name = $2;
                                           e.tipo = 3;
-                                          e.valor.valor3 = $5;
+                                          if($4.tipo == 1)
+                                            printf("\n\t---> ERROR! Incompatible types in assigment: %s is string and %s int", e.name, $4.name);
+                                          else if($4.tipo == 2)
+                                            printf("\n\t---> ERROR! Incompatible types in assigment: %s is string and %s double", e.name, $4.name);
+                                          else if($4.tipo == 3)
+                                            e.valor.valor3 = $4.valor.valor3;
+
                                           if(Buscar(&ts, e)){
-                                            printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $3);
+                                            printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $2);
                                           }
                                           else{
                                             Insert(&ts, e);
                                             printf("\n\t Se agregó correctamente\n");
                                           }
-                                          ImprimeTS(&ts);
                                         }
                                       }
-                                      
+                                      else{
+                                        printf("\n\t-->ERROR! no ha sido declarada previamente %s\n", $4.name);}
+                                      ImprimeTS(&ts);
+                                  }
+
+        | TIPO ID '=' exp_e ';'   {
+                                    elemento e;
+
+                                    if(!strcmp($1, "int")){
+                                      e.name = $2;
+                                      e.tipo = 1;
+                                      e.valor.valor1 = $4;
+                                      if(Buscar(&ts, e)){
+                                        printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $2);
+                                      }
+                                      else{
+                                        Insert(&ts, e);
+                                        printf("\n\t Se agregó correctamente\n");
+                                        ImprimeTS(&ts);
+                                      }
+                                    }
+                                    else if(!strcmp($1, "double")){
+                                      e.name = $2;
+                                      e.tipo = 2;
+                                      e.valor.valor2 = $4;
+                                      if(Buscar(&ts, e)){
+                                        printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $2);
+                                      }
+                                      else{
+                                        Insert(&ts, e);
+                                        printf("\n\t Se agregó correctamente\n");
+                                        ImprimeTS(&ts);
+                                      }
+                                    }
+                                    else if(!strcmp($1, "string")){
+                                      printf("\n\t--->ERROR! Incompatible types in assigment\n");
+                                    }
+                                  }
+
+      | TIPO ID '=' exp_f ';'   {
+                                  elemento e;
+                                  if(!strcmp($1, "int")){
+                                    e.name = $2;
+                                    e.tipo = 1;
+                                    e.valor.valor1 = $4;
+                                    if(Buscar(&ts, e)){
+                                      printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $2);
+                                    }
+                                    else{
+                                      Insert(&ts, e);
+                                      printf("\n\t Se agregó correctamente\n");
+                                      ImprimeTS(&ts);
+                                    }
+                                  }
+                                  else if(!strcmp($1, "double")){
+                                    e.name = $2;
+                                    e.tipo = 2;
+                                    e.valor.valor2 = $4;
+                                    if(Buscar(&ts, e)){
+                                      printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $2);
+                                    }
+                                    else{
+                                      Insert(&ts, e);
+                                      printf("\n\t Se agregó correctamente\n");
+                                      ImprimeTS(&ts);
+                                    }
+                                  }
+                                  else if(!strcmp($1, "string")){
+                                    printf("\n\t--->ERROR! Incompatible types in assigment\n");
+                                  }
+                                }
+
+        | TIPO ID '=' exp_c ';'  {
+                                    elemento e;
+                                    if(!strcmp($1, "int")){
+                                      printf("\n\t--->ERROR! Incompatible types in assigment\n");
+                                    }
+                                    else if(!strcmp($1, "double")){
+                                      printf("\n\t--->ERROR! Incompatible types in assigment\n");
+                                    }
+                                    else if(!strcmp($1, "string")){
+                                      e.name = $2;
+                                      e.tipo = 3;
+                                      e.valor.valor3 = $4;
+                                      if(Buscar(&ts, e)){
+                                        printf("\n\t-->ERROR! ya ha sido declarada previamente %s\n", $2);
+                                      }
+                                      else{
+                                        Insert(&ts, e);
+                                        printf("\n\t Se agregó correctamente\n");
+                                        ImprimeTS(&ts);
+                                      }
+                                    }
+                                  }
+/*
 asig: ID '=' exp_e ';'  {
                           elemento e;
                           posicion p;
                           elemento * e_ts;
 
                           e.name = $1;
+
                           p = Search(&ts,e);
 
                           if(p != NULL){
@@ -260,6 +409,7 @@ asig: ID '=' exp_e ';'  {
                             }
                             ImprimeTS(&ts);
                           }
+
       | ID '=' exp_c ';'  {
                             elemento e;
                             posicion p;
@@ -291,8 +441,7 @@ asig: ID '=' exp_e ';'  {
                           }
 
 
-;
-
+;*/
 
 /* expvar, expdec, exptipo exprvarIntDO */
 
