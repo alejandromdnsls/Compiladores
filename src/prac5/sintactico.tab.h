@@ -60,7 +60,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 14 "sintactico.y"
+#line 18 "sintactico.y"
 {  /* especifica la colección completa de tipo de datos pibles */
   int entero;
   double flotante;
