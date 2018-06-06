@@ -42,8 +42,8 @@
      ENTERO = 258,
      REAL = 259,
      CADENA = 260,
-     ID = 261,
-     TIPO = 262,
+     TIPO = 261,
+     ID = 262,
      POW = 263
    };
 #endif
@@ -51,8 +51,8 @@
 #define ENTERO 258
 #define REAL 259
 #define CADENA 260
-#define ID 261
-#define TIPO 262
+#define TIPO 261
+#define ID 262
 #define POW 263
 
 
@@ -60,15 +60,16 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 14 "sintactico.y"
-{  /* especifica la colección completa de tipo de datos posibles */
+#line 18 "sintactico.y"
+{  /* especifica la colección completa de tipo de datos pibles */
   int entero;
   double flotante;
   char* str;
-  /*Valor* valor;*/
+  Valor valor;
+  elemento elem;
 }
 /* Line 1529 of yacc.c.  */
-#line 72 "sintactico.tab.h"
+#line 73 "sintactico.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

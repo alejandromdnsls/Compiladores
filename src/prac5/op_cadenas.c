@@ -41,15 +41,32 @@ char* concatenar(char* cad1, char* cad2){
   return cadena;
 }
 
-/*
-char* resta(char* cad1, char* cad2){
-  char* cadena;
-  len_cadena_r = len_cadena(cad1);
-  int j = 0
-
-  for(i = 0; i < len_cadena_r; i++){
-    if(cad1[i] == cad2[j])
-  }
-
-  return cadena;
-}*/
+char* resta(char*cad1,char*cad2)
+{
+    int i=0,j=0,k=0;
+    int len_cadena1, len_cadena2;
+    char *aux;
+    len_cadena1=len_cadena(cad1);
+    len_cadena2=len_cadena(cad2);
+    aux=malloc(len_cadena1+len_cadena2);
+    while(cad1[i]!='\0')
+    {
+        if(cad1[i]==cad2[j])
+        {
+            i++;
+            j++;
+        }
+        else
+        {
+            aux[k]=cad1[i];
+            i++;
+            k++;
+        }
+    }
+    if(j!=len_cadena2)
+    {
+        aux = cad1;
+    }
+    aux[k]='\0';
+    return aux;
+}
