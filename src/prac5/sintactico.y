@@ -51,6 +51,7 @@ line:     '\n'
         | decl '\n'
         | asig '\n'
         | expVar '\n' { /*printf("\tresultado: %s\n", $1.valor.valor3);*/ }
+        | err '\n'
 ;
 
 exp_e:  ENTERO { $$ = $1; /*printf("%d\n", $1);*/ }
@@ -942,8 +943,8 @@ decl:  TIPO ID ';' {
                       else{
                         Insert(&ts, e);
                         printf("\n\t Se agregó correctamente\n");
+                        ImprimeTS(&ts);
                       }
-                      ImprimeTS(&ts);
                     }
 
         | TIPO ID '=' expVar ';'   {
@@ -969,6 +970,7 @@ decl:  TIPO ID ';' {
                                           else{
                                             Insert(&ts, e);
                                             printf("\n\t Se agregó correctamente\n");
+                                            ImprimeTS(&ts);
                                           }
                                         }
                                         if(!strcmp($1, "double")){
@@ -987,6 +989,7 @@ decl:  TIPO ID ';' {
                                           else{
                                             Insert(&ts, e);
                                             printf("\n\t Se agregó correctamente\n");
+                                            ImprimeTS(&ts);
                                           }
                                         }
                                         if(!strcmp($1, "string")){
@@ -1005,9 +1008,9 @@ decl:  TIPO ID ';' {
                                           else{
                                             Insert(&ts, e);
                                             printf("\n\t Se agregó correctamente\n");
+                                            ImprimeTS(&ts);
                                           }
                                         }
-                                        ImprimeTS(&ts);
                                       }
                                       else{
                                         printf("\n\t-->ERROR! no se ha podido declarar %s\n", $2);
@@ -1125,10 +1128,12 @@ asig: ID '=' exp_e ';'  {
                             if(e_ts->tipo == 1){
                               e_ts->valor.valor1=$3;
                               printf("\n\tAsignacion correcta\n");
+                              ImprimeTS(&ts);
                             }
                             else if(e_ts->tipo == 2){
                               e_ts->valor.valor2=$3;
                               printf("\n\tAsignacion correcta\n");
+                              ImprimeTS(&ts);
                             }
                             else if(e_ts->tipo == 3){
                               printf("\n\t--->ERROR! Incompatible types in assigment\n");
@@ -1137,7 +1142,6 @@ asig: ID '=' exp_e ';'  {
                           else{
                             printf("\n\t-->ERROR! asignacion primero tiene que ser declarado %s\n", e.name);
                           }
-                          ImprimeTS(&ts);
                         }
 
       | ID '=' exp_f ';'  {
@@ -1156,10 +1160,12 @@ asig: ID '=' exp_e ';'  {
                               if(e_ts->tipo == 1){
                                 e_ts->valor.valor1=$3;
                                 printf("\n\tAsignacion correcta\n");
+                                ImprimeTS(&ts);
                               }
                               else if(e_ts->tipo == 2){
                                 e_ts->valor.valor2=$3;
                                 printf("\n\tAsignacion correcta\n");
+                                ImprimeTS(&ts);
                               }
                               else if(e_ts->tipo == 3){
                                 printf("\n\t--->ERROR! Incompatible types in assigment\n");
@@ -1168,7 +1174,6 @@ asig: ID '=' exp_e ';'  {
                             else{
                               printf("\n\t-->ERROR! asignacion primero tiene que ser declarado %s\n", e.name);
                             }
-                            ImprimeTS(&ts);
                           }
 
       | ID '=' exp_c ';'  {
@@ -1194,12 +1199,12 @@ asig: ID '=' exp_e ';'  {
                               else if(e_ts->tipo == 3){
                                 e_ts->valor.valor3=$3;
                                 printf("\n\tAsignacion correcta\n");
+                                ImprimeTS(&ts);
                               }
                             }
                             else{
                               printf("\n\t-->ERROR! asignacion primero tiene que ser declarado %s\n", e.name);
                             }
-                            ImprimeTS(&ts);
                           }
 
       | ID '=' expVar ';' {
@@ -1216,33 +1221,44 @@ asig: ID '=' exp_e ';'  {
                               if(p != NULL){
                                 e_ts = getElement(&ts, p);
                                 if(e_ts->tipo == 1){
-                                  if($3.tipo == 1)
+                                  if($3.tipo == 1){
                                     e_ts->valor.valor1 = $3.valor.valor1;
-                                  else if($3.tipo == 2)
+                                    printf("\n\tAsignacion correcta\n");
+                                    ImprimeTS(&ts);
+                                  }
+                                  else if($3.tipo == 2){
                                     e_ts->valor.valor1 = $3.valor.valor2;
+                                    printf("\n\tAsignacion correcta\n");
+                                    ImprimeTS(&ts);
+                                  }
                                   else if($3.tipo == 3)
                                     printf("\n\t---> ERROR! Incompatible types in assigment: %s is string and %s int", e.name, $3.name);
-                                  //printf("\n\tAsignacion correcta\n");
                                 }
                                 else if(e_ts->tipo == 2){
-                                  if($3.tipo == 1)
+                                  if($3.tipo == 1){
                                     e_ts->valor.valor2 = $3.valor.valor1;
-                                  else if($3.tipo == 2)
+                                    printf("\n\tAsignacion correcta\n");
+                                    ImprimeTS(&ts);
+                                  }
+                                  else if($3.tipo == 2){
                                     e_ts->valor.valor2 = $3.valor.valor2;
+                                    printf("\n\tAsignacion correcta\n");
+                                    ImprimeTS(&ts);
+                                  }
                                   else if($3.tipo == 3)
                                     printf("\n\t---> ERROR! Incompatible types in assigment: %s is string and %s double", e.name, $3.name);
-                                  //printf("\n\tAsignacion correcta\n");
                                 }
                                 else if(e_ts->tipo == 3){
                                   if($3.tipo == 1)
                                     printf("\n\t---> ERROR! Incompatible types in assigment: %s is int and %s string", e.name, $3.name);
                                   else if($3.tipo == 2)
                                     printf("\n\t---> ERROR! Incompatible types in assigment: %s is double and %s string", e.name, $3.name);
-                                  else if($3.tipo == 3)
+                                  else if($3.tipo == 3){
                                     e_ts->valor.valor3=$3.valor.valor3;
-                                  //printf("\n\tAsignacion correcta\n");
+                                    printf("\n\tAsignacion correcta\n");
+                                    ImprimeTS(&ts);
+                                  }
                                 }
-                              ImprimeTS(&ts);
                               }
                               else{
                                 printf("\n\t-->ERROR! asignacion primero tiene que ser declarado %s\n", e.name);
@@ -1257,6 +1273,18 @@ asig: ID '=' exp_e ';'  {
                           }
 ;
 
+
+err:    TIPO ID '=' expVar { printf("\n\t-->ERROR! te falto escribir ';'\n"); }
+      | TIPO ID '=' exp_e { printf("\n\t-->ERROR! te falto escribir ';'\n"); }
+      | TIPO ID '=' exp_f { printf("\n\t-->ERROR! te falto escribir ';'\n"); }
+      | TIPO ID '=' exp_c { printf("\n\t-->ERROR! te falto escribir ';'\n"); }
+      | TIPO ID { printf("\n\t-->ERROR! te falto escribir ';'\n"); }
+      | ID '=' exp_e { printf("\n\t-->ERROR! te falto escribir ';'\n"); }
+      | ID '=' exp_f { printf("\n\t-->ERROR! te falto escribir ';'\n"); }
+      | ID '=' exp_c { printf("\n\t-->ERROR! te falto escribir ';'\n"); }
+      | ID '=' expVar { printf("\n\t-->ERROR! te falto escribir ';'\n"); }
+
+;
 %%
 
 int main(){
