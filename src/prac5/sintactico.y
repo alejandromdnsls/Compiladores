@@ -11,6 +11,7 @@ lista ts; //Se declara la lista en este caso Tabla de Simbolos
 int flag_esta = 1; // Controla que las variables hayan sido declaradas
 int flag_incompatibles=1; //Controla que los tipos de datos coincidan
 int flag_op = 1; //controla las operaciones que no se pueden hacer
+int flag_print = 0; // controla la impresion de resultado para hacer la que corresponde a su tipo puede ser 1, 2 o 3
 %}
 
 /* Declaraciones de BISON */
@@ -50,7 +51,24 @@ line:     '\n'
         | exp_c '\n' { printf("\tresultado: %s\n", $1); }
         | decl '\n'
         | asig '\n'
-        | expVar '\n' { /*printf("\tresultado: %s\n", $1.valor.valor3);*/ }
+        | expVar '\n' {
+                        if(flag_print==1){
+                          printf("\tresultado: %d\n", $1.valor.valor1);
+                          flag_print = 0;
+                        }
+                        else if(flag_print==2){
+                          printf("\tresultado: %f\n", $1.valor.valor2);
+                          flag_print = 0;
+                        }
+                        else if(flag_print==3){
+                          printf("\tresultado: %s\n", $1.valor.valor3);
+                          flag_print = 0;
+                        }
+                        else
+                          flag_incompatibles=1;
+                          flag_op=1;
+                          flag_esta=1;
+                      }
         | err '\n'
 ;
 
@@ -129,9 +147,11 @@ expVar: ID  {
                       $$ = *e_aux;
                       if($$.tipo == 1){
                         $$.valor.valor1 = ($2.valor.valor1)*(-1);
+                        flag_print = 1;
                       }
                       else if($$.tipo == 2){
                         $$.valor.valor2 = ($2.valor.valor2)*(-1);
+                        flag_print = 2;
                       }
                       else if($$.tipo == 3){
                         printf("\n\t-->ERROR! No hay cadenas negativas\n");
@@ -145,39 +165,60 @@ expVar: ID  {
                             if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                             if($$.tipo == 1){
                               $$.tipo = 2; //Se fuerza a ser de tipo double para no perder los decimales en la recursion
-                              if($1.tipo == 1 && $3.tipo==1)
+                              if($1.tipo == 1 && $3.tipo==1){
                                 $$.valor.valor2 = $1.valor.valor1 + $3.valor.valor1;
-                              else if($1.tipo == 1 && $3.tipo == 2)
+                                flag_print=2;
+                              }
+                              else if($1.tipo == 1 && $3.tipo == 2){
                                 $$.valor.valor2 = $1.valor.valor1 + $3.valor.valor2;
-                              else if($1.tipo == 2 && $3.tipo == 1)
+                                flag_print = 2;
+                              }
+                              else if($1.tipo == 2 && $3.tipo == 1){
                                 $$.valor.valor2 = $1.valor.valor2 + $3.valor.valor1;
-                              else if($1.tipo == 2 && $3.tipo == 2)
+                                flag_print = 2;
+                              }
+                              else if($1.tipo == 2 && $3.tipo == 2){
                                 $$.valor.valor2 = $1.valor.valor2 + $3.valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                             }
                             else if($$.tipo ==2){
-                              if($1.tipo == 1 && $3.tipo==1)
+                              if($1.tipo == 1 && $3.tipo==1){
                                 $$.valor.valor2 = $1.valor.valor1 + $3.valor.valor1;
-                              else if($1.tipo == 1 && $3.tipo == 2)
+                                flag_print = 2;
+                              }
+                              else if($1.tipo == 1 && $3.tipo == 2){
                                 $$.valor.valor2 = $1.valor.valor1 + $3.valor.valor2;
-                              else if($1.tipo == 2 && $3.tipo == 1)
+                                flag_print = 2;
+                              }
+                              else if($1.tipo == 2 && $3.tipo == 1){
                                 $$.valor.valor2 = $1.valor.valor2 + $3.valor.valor1;
-                              else if($1.tipo == 2 && $3.tipo == 2)
+                                flag_print = 2;
+                              }
+                              else if($1.tipo == 2 && $3.tipo == 2){
                                 $$.valor.valor2 = $1.valor.valor2 + $3.valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print=0;
                               }
                             }
                             else if($$.tipo == 3){
-                              if($1.tipo == 3 && $3.tipo == 3)
+                              if($1.tipo == 3 && $3.tipo == 3){
                                 $$.valor.valor3 = concatenar($1.valor.valor3, $3.valor.valor3);
+                                flag_print = 3;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print=0;
                               }
                             }
                             //printf("$$.name: %s\n", $$.name);
@@ -192,12 +233,16 @@ expVar: ID  {
                               if($$.tipo == 1){
                                 $$.tipo = 2;
                                 $$.valor.valor2 = $1.valor.valor1 + $3;
+                                flag_print = 2;
                               }
-                              else if ($$.tipo == 2)
+                              else if ($$.tipo == 2){
                                 $$.valor.valor2 = $1.valor.valor2 + $3;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             }
@@ -207,12 +252,16 @@ expVar: ID  {
                               if($$.tipo == 1){
                                 $$.tipo = 2;
                                 $$.valor.valor2 = $1.valor.valor1 + $3;
+                                flag_print = 2;
                               }
-                              else if ($$.tipo == 2)
+                              else if ($$.tipo == 2){
                                 $$.valor.valor2 = $1.valor.valor2 + $3;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             }
@@ -222,13 +271,16 @@ expVar: ID  {
                               if ($$.tipo == 1){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if ($$.tipo == 2){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if($$.tipo == 3)
                                 $$.valor.valor3 = concatenar($1.valor.valor3, $3);
+                                flag_print = 3;
                               }
                             }
 
@@ -241,12 +293,16 @@ expVar: ID  {
                               if($$.tipo == 1){
                                 $$.tipo = 2;
                                 $$.valor.valor2 = aux + $3.valor.valor1;
+                                flag_print = 2;
                               }
-                              else if ($$.tipo == 2)
+                              else if ($$.tipo == 2){
                                 $$.valor.valor2 = aux + $3.valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             }
@@ -260,12 +316,16 @@ expVar: ID  {
                               if($$.tipo == 1){
                                 $$.tipo = 2;
                                 $$.valor.valor2 = aux + $3.valor.valor1;
+                                flag_print = 2;
                               }
-                              else if ($$.tipo == 2)
+                              else if ($$.tipo == 2){
                                 $$.valor.valor2 = aux + $3.valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             }
@@ -279,13 +339,16 @@ expVar: ID  {
                               if ($$.tipo == 1){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if ($$.tipo == 2){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if($$.tipo == 3)
                                 $$.valor.valor3 = concatenar(aux, $3.valor.valor3);
+                                flag_print = 3;
                               }
                             }
 
@@ -293,39 +356,60 @@ expVar: ID  {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if($$.tipo == 1){
                                 $$.tipo = 2; //Se fuerza a ser de tipo double para no perder los decimales en la recursion
-                                if($1.tipo == 1 && $3.tipo==1)
+                                if($1.tipo == 1 && $3.tipo==1){
                                   $$.valor.valor2 = $1.valor.valor1 - $3.valor.valor1;
-                                else if($1.tipo == 1 && $3.tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if($1.tipo == 1 && $3.tipo == 2){
                                   $$.valor.valor2 = $1.valor.valor1 - $3.valor.valor2;
-                                else if($1.tipo == 2 && $3.tipo == 1)
+                                  flag_print = 2;
+                                }
+                                else if($1.tipo == 2 && $3.tipo == 1){
                                   $$.valor.valor2 = $1.valor.valor2 - $3.valor.valor1;
-                                else if($1.tipo == 2 && $3.tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if($1.tipo == 2 && $3.tipo == 2){
                                   $$.valor.valor2 = $1.valor.valor2 - $3.valor.valor2;
+                                  flag_print = 2;
+                                }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               else if($$.tipo ==2){
-                                if($1.tipo == 1 && $3.tipo==1)
+                                if($1.tipo == 1 && $3.tipo==1){
                                   $$.valor.valor2 = $1.valor.valor1 - $3.valor.valor1;
-                                else if($1.tipo == 1 && $3.tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if($1.tipo == 1 && $3.tipo == 2){
                                   $$.valor.valor2 = $1.valor.valor1 - $3.valor.valor2;
-                                else if($1.tipo == 2 && $3.tipo == 1)
+                                  flag_print = 2;
+                                }
+                                else if($1.tipo == 2 && $3.tipo == 1){
                                   $$.valor.valor2 = $1.valor.valor2 - $3.valor.valor1;
-                                else if($1.tipo == 2 && $3.tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if($1.tipo == 2 && $3.tipo == 2){
                                   $$.valor.valor2 = $1.valor.valor2 - $3.valor.valor2;
+                                  flag_print = 2;
+                                }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               else if($$.tipo == 3){
-                                if($1.tipo == 3 && $3.tipo == 3)
+                                if($1.tipo == 3 && $3.tipo == 3){
                                   $$.valor.valor3 = resta($1.valor.valor3, $3.valor.valor3);
+                                  flag_print = 3;
+                                }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               }
@@ -337,12 +421,16 @@ expVar: ID  {
                               if($$.tipo == 1){
                                 $$.tipo = 2;
                                 $$.valor.valor2 = $1.valor.valor1 - $3;
+                                flag_print = 2;
                               }
-                              else if ($$.tipo == 2)
+                              else if ($$.tipo == 2){
                                 $$.valor.valor2 = $1.valor.valor2 - $3;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             }
@@ -352,12 +440,16 @@ expVar: ID  {
                               if($$.tipo == 1){
                                 $$.tipo = 2;
                                 $$.valor.valor2 = $1.valor.valor1 - $3;
+                                flag_print = 2;
                               }
-                              else if ($$.tipo == 2)
+                              else if ($$.tipo == 2){
                                 $$.valor.valor2 = $1.valor.valor2 - $3;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             }
@@ -367,13 +459,17 @@ expVar: ID  {
                               if ($$.tipo == 1){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if ($$.tipo == 2){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
-                              else if($$.tipo == 3)
+                              else if($$.tipo == 3){
                                 $$.valor.valor3 = resta($1.valor.valor3, $3);
+                                flag_print = 3;
+                              }
                               }
                             }
 
@@ -386,12 +482,16 @@ expVar: ID  {
                               if($$.tipo == 1){
                                 $$.tipo = 2;
                                 $$.valor.valor2 = aux - $3.valor.valor1;
+                                flag_print = 2;
                               }
-                              else if ($$.tipo == 2)
+                              else if ($$.tipo == 2){
                                 $$.valor.valor2 = aux - $3.valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             }
@@ -405,12 +505,16 @@ expVar: ID  {
                               if($$.tipo == 1){
                                 $$.tipo = 2;
                                 $$.valor.valor2 = aux - $3.valor.valor1;
+                                flag_print = 2;
                               }
-                              else if ($$.tipo == 2)
+                              else if ($$.tipo == 2){
                                 $$.valor.valor2 = aux - $3.valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             }
@@ -424,13 +528,16 @@ expVar: ID  {
                               if ($$.tipo == 1){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if ($$.tipo == 2){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if($$.tipo == 3)
                                 $$.valor.valor3 = resta(aux, $3.valor.valor3);
+                                flag_print = 3;
                               }
                             }
 
@@ -438,41 +545,61 @@ expVar: ID  {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if($$.tipo == 1){
                                 $$.tipo = 2; //Se fuerza a ser de tipo double para no perder los decimales en la recursion
-                                if($1.tipo == 1 && $3.tipo==1)
+                                if($1.tipo == 1 && $3.tipo==1){
                                   $$.valor.valor2 = $1.valor.valor1 * $3.valor.valor1;
-                                else if($1.tipo == 1 && $3.tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if($1.tipo == 1 && $3.tipo == 2){
                                   $$.valor.valor2 = $1.valor.valor1 * $3.valor.valor2;
-                                else if($1.tipo == 2 && $3.tipo == 1)
+                                  flag_print = 2;
+                                }
+                                else if($1.tipo == 2 && $3.tipo == 1){
                                   $$.valor.valor2 = $1.valor.valor2 * $3.valor.valor1;
-                                else if($1.tipo == 2 && $3.tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if($1.tipo == 2 && $3.tipo == 2){
                                   $$.valor.valor2 = $1.valor.valor2 * $3.valor.valor2;
+                                  flag_print = 2;
+                                }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               else if($$.tipo ==2){
-                                if($1.tipo == 1 && $3.tipo==1)
+                                if($1.tipo == 1 && $3.tipo==1){
                                   $$.valor.valor2 = $1.valor.valor1 * $3.valor.valor1;
-                                else if($1.tipo == 1 && $3.tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if($1.tipo == 1 && $3.tipo == 2){
                                   $$.valor.valor2 = $1.valor.valor1 * $3.valor.valor2;
-                                else if($1.tipo == 2 && $3.tipo == 1)
+                                  flag_print = 2;
+                                }
+                                else if($1.tipo == 2 && $3.tipo == 1){
                                   $$.valor.valor2 = $1.valor.valor2 * $3.valor.valor1;
-                                else if($1.tipo == 2 && $3.tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if($1.tipo == 2 && $3.tipo == 2){
                                   $$.valor.valor2 = $1.valor.valor2 * $3.valor.valor2;
+                                  flag_print = 2;
+                                }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               else if($$.tipo == 3){
                                 if($1.tipo == 3 && $3.tipo == 3){
                                   printf("\n\t-->ERROR! Operacion no se puede realizar\n");
                                   flag_op = 0;
+                                  flag_print = 0;
                                 }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               }
@@ -483,12 +610,16 @@ expVar: ID  {
                               if($$.tipo == 1){
                                 $$.tipo = 2;
                                 $$.valor.valor2 = $1.valor.valor1 * $3;
+                                flag_print = 2;
                               }
-                              else if ($$.tipo == 2)
+                              else if ($$.tipo == 2){
                                 $$.valor.valor2 = $1.valor.valor2 * $3;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             }
@@ -498,12 +629,16 @@ expVar: ID  {
                               if($$.tipo == 1){
                                 $$.tipo = 2;
                                 $$.valor.valor2 = $1.valor.valor1 * $3;
+                                flag_print = 2;
                               }
-                              else if ($$.tipo == 2)
+                              else if ($$.tipo == 2){
                                 $$.valor.valor2 = $1.valor.valor2 * $3;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             }
@@ -513,19 +648,23 @@ expVar: ID  {
                               if ($$.tipo == 1){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if ($$.tipo == 2){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if($$.tipo == 3){
                                 if($$.tipo == 3){
                                   printf("\n\t-->ERROR! Operacion no se puede realizar\n");
                                   flag_op = 0;
+                                  flag_print = 0;
                                 }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               }
@@ -540,12 +679,16 @@ expVar: ID  {
                               if($$.tipo == 1){
                                 $$.tipo = 2;
                                 $$.valor.valor2 = aux * $3.valor.valor1;
+                                flag_print = 2;
                               }
-                              else if ($$.tipo == 2)
+                              else if ($$.tipo == 2){
                                 $$.valor.valor2 = aux * $3.valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             }
@@ -559,12 +702,16 @@ expVar: ID  {
                               if($$.tipo == 1){
                                 $$.tipo = 2;
                                 $$.valor.valor2 = aux * $3.valor.valor1;
+                                flag_print = 2;
                               }
-                              else if ($$.tipo == 2)
+                              else if ($$.tipo == 2){
                                 $$.valor.valor2 = aux * $3.valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             }
@@ -578,19 +725,23 @@ expVar: ID  {
                               if ($$.tipo == 1){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if ($$.tipo == 2){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if($$.tipo == 3){
                                 if($$.tipo == 3){
                                   printf("\n\t-->ERROR! Operacion no se puede realizar\n");
                                   flag_op = 0;
+                                  flag_print = 0;
                                 }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               }

@@ -100,6 +100,7 @@ lista ts; //Se declara la lista en este caso Tabla de Simbolos
 int flag_esta = 1; // Controla que las variables hayan sido declaradas
 int flag_incompatibles=1; //Controla que los tipos de datos coincidan
 int flag_op = 1; //controla las operaciones que no se pueden hacer
+int flag_print = 0; // controla la impresion de resultado para hacer la que corresponde a su tipo puede ser 1, 2 o 3
 
 
 /* Enabling traces.  */
@@ -122,7 +123,7 @@ int flag_op = 1; //controla las operaciones que no se pueden hacer
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 18 "sintactico.y"
+#line 19 "sintactico.y"
 {  /* especifica la colección completa de tipo de datos pibles */
   int entero;
   double flotante;
@@ -131,7 +132,7 @@ typedef union YYSTYPE
   elemento elem;
 }
 /* Line 193 of yacc.c.  */
-#line 135 "sintactico.tab.c"
+#line 136 "sintactico.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -144,7 +145,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 148 "sintactico.tab.c"
+#line 149 "sintactico.tab.c"
 
 #ifdef short
 # undef short
@@ -475,16 +476,16 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    43,    43,    44,    47,    48,    49,    50,    51,    52,
-      53,    54,    57,    58,    59,    60,    61,    62,    63,    65,
-      68,    69,    70,    71,    72,    73,    74,    76,    77,    78,
-      79,    80,    82,    83,    84,    85,    86,    88,    92,    93,
-      99,   108,   125,   142,   190,   205,   220,   235,   254,   273,
-     292,   335,   350,   365,   380,   399,   418,   437,   481,   496,
-     511,   534,   553,   572,   599,   643,   658,   673,   696,   715,
-     734,   761,   805,   820,   835,   858,   877,   896,   923,   950,
-    1023,  1057,  1090,  1114,  1147,  1179,  1210,  1277,  1278,  1279,
-    1280,  1281,  1282,  1283,  1284,  1285
+       0,    44,    44,    45,    48,    49,    50,    51,    52,    53,
+      54,    72,    75,    76,    77,    78,    79,    80,    81,    83,
+      86,    87,    88,    89,    90,    91,    92,    94,    95,    96,
+      97,    98,   100,   101,   102,   103,   104,   106,   110,   111,
+     117,   126,   143,   162,   231,   250,   269,   287,   310,   333,
+     355,   419,   438,   457,   476,   499,   522,   544,   608,   627,
+     646,   673,   696,   719,   750,   794,   809,   824,   847,   866,
+     885,   912,   956,   971,   986,  1009,  1028,  1047,  1074,  1101,
+    1174,  1208,  1241,  1265,  1298,  1330,  1361,  1428,  1429,  1430,
+    1431,  1432,  1433,  1434,  1435,  1436
 };
 #endif
 
@@ -1534,162 +1535,179 @@ yyreduce:
   switch (yyn)
     {
         case 5:
-#line 48 "sintactico.y"
+#line 49 "sintactico.y"
     { printf("\tresultado: %d\n", (yyvsp[(1) - (2)].entero)); ;}
     break;
 
   case 6:
-#line 49 "sintactico.y"
+#line 50 "sintactico.y"
     { printf("\tresultado: %f\n", (yyvsp[(1) - (2)].flotante)); ;}
     break;
 
   case 7:
-#line 50 "sintactico.y"
+#line 51 "sintactico.y"
     { printf("\tresultado: %s\n", (yyvsp[(1) - (2)].str)); ;}
     break;
 
   case 10:
-#line 53 "sintactico.y"
-    { /*printf("\tresultado: %s\n", $1.valor.valor3);*/ ;}
+#line 54 "sintactico.y"
+    {
+                        if(flag_print==1){
+                          printf("\tresultado: %d\n", (yyvsp[(1) - (2)].elem).valor.valor1);
+                          flag_print = 0;
+                        }
+                        else if(flag_print==2){
+                          printf("\tresultado: %f\n", (yyvsp[(1) - (2)].elem).valor.valor2);
+                          flag_print = 0;
+                        }
+                        else if(flag_print==3){
+                          printf("\tresultado: %s\n", (yyvsp[(1) - (2)].elem).valor.valor3);
+                          flag_print = 0;
+                        }
+                        else
+                          flag_incompatibles=1;
+                          flag_op=1;
+                          flag_esta=1;
+                      ;}
     break;
 
   case 12:
-#line 57 "sintactico.y"
+#line 75 "sintactico.y"
     { (yyval.entero) = (yyvsp[(1) - (1)].entero); /*printf("%d\n", $1);*/ ;}
     break;
 
   case 13:
-#line 58 "sintactico.y"
+#line 76 "sintactico.y"
     { (yyval.entero) = ((yyvsp[(2) - (2)].entero))*(-1); ;}
     break;
 
   case 14:
-#line 59 "sintactico.y"
+#line 77 "sintactico.y"
     { (yyval.entero) = ((yyvsp[(2) - (2)].entero))*(-1); ;}
     break;
 
   case 15:
-#line 60 "sintactico.y"
+#line 78 "sintactico.y"
     { (yyval.entero) = (yyvsp[(1) - (3)].entero) + (yyvsp[(3) - (3)].entero); ;}
     break;
 
   case 16:
-#line 61 "sintactico.y"
+#line 79 "sintactico.y"
     { (yyval.entero) = (yyvsp[(1) - (3)].entero) - (yyvsp[(3) - (3)].entero); ;}
     break;
 
   case 17:
-#line 62 "sintactico.y"
+#line 80 "sintactico.y"
     { (yyval.entero) = (yyvsp[(1) - (3)].entero) * (yyvsp[(3) - (3)].entero); ;}
     break;
 
   case 18:
-#line 63 "sintactico.y"
+#line 81 "sintactico.y"
     { (yyval.entero) = (yyvsp[(1) - (3)].entero) / (yyvsp[(3) - (3)].entero); ;}
     break;
 
   case 19:
-#line 65 "sintactico.y"
+#line 83 "sintactico.y"
     { (yyval.entero) = pow((yyvsp[(3) - (6)].entero),(yyvsp[(5) - (6)].entero)); ;}
     break;
 
   case 20:
-#line 68 "sintactico.y"
+#line 86 "sintactico.y"
     { (yyval.flotante) = (yyvsp[(1) - (1)].flotante); /*printf("%f\n", $1);*/ ;}
     break;
 
   case 21:
-#line 69 "sintactico.y"
+#line 87 "sintactico.y"
     { (yyval.flotante) = ((yyvsp[(2) - (2)].flotante))*(-1); ;}
     break;
 
   case 22:
-#line 70 "sintactico.y"
+#line 88 "sintactico.y"
     { (yyval.flotante) = ((yyvsp[(2) - (2)].flotante))*(-1); ;}
     break;
 
   case 23:
-#line 71 "sintactico.y"
+#line 89 "sintactico.y"
     { (yyval.flotante) = (yyvsp[(1) - (3)].flotante) + (yyvsp[(3) - (3)].flotante); ;}
     break;
 
   case 24:
-#line 72 "sintactico.y"
+#line 90 "sintactico.y"
     { (yyval.flotante) = (yyvsp[(1) - (3)].flotante) - (yyvsp[(3) - (3)].flotante); ;}
     break;
 
   case 25:
-#line 73 "sintactico.y"
+#line 91 "sintactico.y"
     { (yyval.flotante) = (yyvsp[(1) - (3)].flotante) * (yyvsp[(3) - (3)].flotante); ;}
     break;
 
   case 26:
-#line 74 "sintactico.y"
+#line 92 "sintactico.y"
     { (yyval.flotante) = (yyvsp[(1) - (3)].flotante) / (yyvsp[(3) - (3)].flotante); ;}
     break;
 
   case 27:
-#line 76 "sintactico.y"
+#line 94 "sintactico.y"
     { (yyval.flotante) = pow((yyvsp[(3) - (6)].flotante),(yyvsp[(5) - (6)].flotante)); ;}
     break;
 
   case 28:
-#line 77 "sintactico.y"
+#line 95 "sintactico.y"
     { (yyval.flotante) = (yyvsp[(1) - (3)].entero) + (yyvsp[(3) - (3)].flotante); ;}
     break;
 
   case 29:
-#line 78 "sintactico.y"
+#line 96 "sintactico.y"
     { (yyval.flotante) = (yyvsp[(1) - (3)].entero) - (yyvsp[(3) - (3)].flotante); ;}
     break;
 
   case 30:
-#line 79 "sintactico.y"
+#line 97 "sintactico.y"
     { (yyval.flotante) = (yyvsp[(1) - (3)].entero) * (yyvsp[(3) - (3)].flotante); ;}
     break;
 
   case 31:
-#line 80 "sintactico.y"
+#line 98 "sintactico.y"
     { (yyval.flotante) = (yyvsp[(1) - (3)].entero) / (yyvsp[(3) - (3)].flotante); ;}
     break;
 
   case 32:
-#line 82 "sintactico.y"
+#line 100 "sintactico.y"
     { (yyval.flotante) = pow((yyvsp[(3) - (6)].entero),(yyvsp[(5) - (6)].flotante)); ;}
     break;
 
   case 33:
-#line 83 "sintactico.y"
+#line 101 "sintactico.y"
     { (yyval.flotante) = (yyvsp[(1) - (3)].flotante) + (yyvsp[(3) - (3)].entero); ;}
     break;
 
   case 34:
-#line 84 "sintactico.y"
+#line 102 "sintactico.y"
     { (yyval.flotante) = (yyvsp[(1) - (3)].flotante) - (yyvsp[(3) - (3)].entero); ;}
     break;
 
   case 35:
-#line 85 "sintactico.y"
+#line 103 "sintactico.y"
     { (yyval.flotante) = (yyvsp[(1) - (3)].flotante) * (yyvsp[(3) - (3)].entero); ;}
     break;
 
   case 36:
-#line 86 "sintactico.y"
+#line 104 "sintactico.y"
     { (yyval.flotante) = (yyvsp[(1) - (3)].flotante) / (yyvsp[(3) - (3)].entero); ;}
     break;
 
   case 37:
-#line 88 "sintactico.y"
+#line 106 "sintactico.y"
     { (yyval.flotante) = pow((yyvsp[(3) - (6)].flotante),(yyvsp[(5) - (6)].entero)); ;}
     break;
 
   case 38:
-#line 92 "sintactico.y"
+#line 110 "sintactico.y"
     { (yyval.str) = (yyvsp[(1) - (1)].str); /*printf("%s\n", $1) */ ;}
     break;
 
   case 39:
-#line 93 "sintactico.y"
+#line 111 "sintactico.y"
     {
                             char* aux;
                             aux = concatenar((yyvsp[(1) - (3)].str), (yyvsp[(3) - (3)].str));
@@ -1698,7 +1716,7 @@ yyreduce:
     break;
 
   case 40:
-#line 99 "sintactico.y"
+#line 117 "sintactico.y"
     {
                             char* aux;
                             aux = resta((yyvsp[(1) - (3)].str),(yyvsp[(3) - (3)].str));
@@ -1707,7 +1725,7 @@ yyreduce:
     break;
 
   case 41:
-#line 108 "sintactico.y"
+#line 126 "sintactico.y"
     {
               posicion p;
               elemento e;
@@ -1727,7 +1745,7 @@ yyreduce:
     break;
 
   case 42:
-#line 125 "sintactico.y"
+#line 143 "sintactico.y"
     {
                       if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                       elemento*e_aux; //Pasa una copia a $$ un tipo elemento
@@ -1735,9 +1753,11 @@ yyreduce:
                       (yyval.elem) = *e_aux;
                       if((yyval.elem).tipo == 1){
                         (yyval.elem).valor.valor1 = ((yyvsp[(2) - (2)].elem).valor.valor1)*(-1);
+                        flag_print = 1;
                       }
                       else if((yyval.elem).tipo == 2){
                         (yyval.elem).valor.valor2 = ((yyvsp[(2) - (2)].elem).valor.valor2)*(-1);
+                        flag_print = 2;
                       }
                       else if((yyval.elem).tipo == 3){
                         printf("\n\t-->ERROR! No hay cadenas negativas\n");
@@ -1747,46 +1767,67 @@ yyreduce:
     break;
 
   case 43:
-#line 142 "sintactico.y"
+#line 162 "sintactico.y"
     {
                             //printf("$$.name: %s\n", $$.name);
                             //printf("$$.tipo: %d\n", $$.tipo);
                             if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                             if((yyval.elem).tipo == 1){
                               (yyval.elem).tipo = 2; //Se fuerza a ser de tipo double para no perder los decimales en la recursion
-                              if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo==1)
+                              if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo==1){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 + (yyvsp[(3) - (3)].elem).valor.valor1;
-                              else if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo == 2)
+                                flag_print=2;
+                              }
+                              else if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 + (yyvsp[(3) - (3)].elem).valor.valor2;
-                              else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 1)
+                                flag_print = 2;
+                              }
+                              else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 1){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 + (yyvsp[(3) - (3)].elem).valor.valor1;
-                              else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 2)
+                                flag_print = 2;
+                              }
+                              else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 + (yyvsp[(3) - (3)].elem).valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                             }
                             else if((yyval.elem).tipo ==2){
-                              if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo==1)
+                              if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo==1){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 + (yyvsp[(3) - (3)].elem).valor.valor1;
-                              else if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo == 2)
+                                flag_print = 2;
+                              }
+                              else if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 + (yyvsp[(3) - (3)].elem).valor.valor2;
-                              else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 1)
+                                flag_print = 2;
+                              }
+                              else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 1){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 + (yyvsp[(3) - (3)].elem).valor.valor1;
-                              else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 2)
+                                flag_print = 2;
+                              }
+                              else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 + (yyvsp[(3) - (3)].elem).valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print=0;
                               }
                             }
                             else if((yyval.elem).tipo == 3){
-                              if((yyvsp[(1) - (3)].elem).tipo == 3 && (yyvsp[(3) - (3)].elem).tipo == 3)
+                              if((yyvsp[(1) - (3)].elem).tipo == 3 && (yyvsp[(3) - (3)].elem).tipo == 3){
                                 (yyval.elem).valor.valor3 = concatenar((yyvsp[(1) - (3)].elem).valor.valor3, (yyvsp[(3) - (3)].elem).valor.valor3);
+                                flag_print = 3;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print=0;
                               }
                             }
                             //printf("$$.name: %s\n", $$.name);
@@ -1797,61 +1838,72 @@ yyreduce:
     break;
 
   case 44:
-#line 190 "sintactico.y"
+#line 231 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2;
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 + (yyvsp[(3) - (3)].entero);
+                                flag_print = 2;
                               }
-                              else if ((yyval.elem).tipo == 2)
+                              else if ((yyval.elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 + (yyvsp[(3) - (3)].entero);
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             ;}
     break;
 
   case 45:
-#line 205 "sintactico.y"
+#line 250 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2;
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 + (yyvsp[(3) - (3)].flotante);
+                                flag_print = 2;
                               }
-                              else if ((yyval.elem).tipo == 2)
+                              else if ((yyval.elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 + (yyvsp[(3) - (3)].flotante);
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             ;}
     break;
 
   case 46:
-#line 220 "sintactico.y"
+#line 269 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if ((yyval.elem).tipo == 1){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if ((yyval.elem).tipo == 2){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if((yyval.elem).tipo == 3)
                                 (yyval.elem).valor.valor3 = concatenar((yyvsp[(1) - (3)].elem).valor.valor3, (yyvsp[(3) - (3)].str));
+                                flag_print = 3;
                               }
                             ;}
     break;
 
   case 47:
-#line 235 "sintactico.y"
+#line 287 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //para pasarle a $$ un tipo elemento
@@ -1861,19 +1913,23 @@ yyreduce:
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2;
                                 (yyval.elem).valor.valor2 = aux + (yyvsp[(3) - (3)].elem).valor.valor1;
+                                flag_print = 2;
                               }
-                              else if ((yyval.elem).tipo == 2)
+                              else if ((yyval.elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = aux + (yyvsp[(3) - (3)].elem).valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             ;}
     break;
 
   case 48:
-#line 254 "sintactico.y"
+#line 310 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //Apuntar al elemento &3 y no perderlo en la recursion
@@ -1883,19 +1939,23 @@ yyreduce:
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2;
                                 (yyval.elem).valor.valor2 = aux + (yyvsp[(3) - (3)].elem).valor.valor1;
+                                flag_print = 2;
                               }
-                              else if ((yyval.elem).tipo == 2)
+                              else if ((yyval.elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = aux + (yyvsp[(3) - (3)].elem).valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             ;}
     break;
 
   case 49:
-#line 273 "sintactico.y"
+#line 333 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //Apuntar al elemento &3 y no perderlo en la recursion
@@ -1905,56 +1965,80 @@ yyreduce:
                               if ((yyval.elem).tipo == 1){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if ((yyval.elem).tipo == 2){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if((yyval.elem).tipo == 3)
                                 (yyval.elem).valor.valor3 = concatenar(aux, (yyvsp[(3) - (3)].elem).valor.valor3);
+                                flag_print = 3;
                               }
                             ;}
     break;
 
   case 50:
-#line 292 "sintactico.y"
+#line 355 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2; //Se fuerza a ser de tipo double para no perder los decimales en la recursion
-                                if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo==1)
+                                if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo==1){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 - (yyvsp[(3) - (3)].elem).valor.valor1;
-                                else if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo == 2){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 - (yyvsp[(3) - (3)].elem).valor.valor2;
-                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 1)
+                                  flag_print = 2;
+                                }
+                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 1){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 - (yyvsp[(3) - (3)].elem).valor.valor1;
-                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 2){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 - (yyvsp[(3) - (3)].elem).valor.valor2;
+                                  flag_print = 2;
+                                }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               else if((yyval.elem).tipo ==2){
-                                if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo==1)
+                                if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo==1){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 - (yyvsp[(3) - (3)].elem).valor.valor1;
-                                else if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo == 2){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 - (yyvsp[(3) - (3)].elem).valor.valor2;
-                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 1)
+                                  flag_print = 2;
+                                }
+                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 1){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 - (yyvsp[(3) - (3)].elem).valor.valor1;
-                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 2){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 - (yyvsp[(3) - (3)].elem).valor.valor2;
+                                  flag_print = 2;
+                                }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               else if((yyval.elem).tipo == 3){
-                                if((yyvsp[(1) - (3)].elem).tipo == 3 && (yyvsp[(3) - (3)].elem).tipo == 3)
+                                if((yyvsp[(1) - (3)].elem).tipo == 3 && (yyvsp[(3) - (3)].elem).tipo == 3){
                                   (yyval.elem).valor.valor3 = resta((yyvsp[(1) - (3)].elem).valor.valor3, (yyvsp[(3) - (3)].elem).valor.valor3);
+                                  flag_print = 3;
+                                }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               }
@@ -1963,61 +2047,73 @@ yyreduce:
     break;
 
   case 51:
-#line 335 "sintactico.y"
+#line 419 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2;
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 - (yyvsp[(3) - (3)].entero);
+                                flag_print = 2;
                               }
-                              else if ((yyval.elem).tipo == 2)
+                              else if ((yyval.elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 - (yyvsp[(3) - (3)].entero);
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             ;}
     break;
 
   case 52:
-#line 350 "sintactico.y"
+#line 438 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2;
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 - (yyvsp[(3) - (3)].flotante);
+                                flag_print = 2;
                               }
-                              else if ((yyval.elem).tipo == 2)
+                              else if ((yyval.elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 - (yyvsp[(3) - (3)].flotante);
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             ;}
     break;
 
   case 53:
-#line 365 "sintactico.y"
+#line 457 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if ((yyval.elem).tipo == 1){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if ((yyval.elem).tipo == 2){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
-                              else if((yyval.elem).tipo == 3)
+                              else if((yyval.elem).tipo == 3){
                                 (yyval.elem).valor.valor3 = resta((yyvsp[(1) - (3)].elem).valor.valor3, (yyvsp[(3) - (3)].str));
+                                flag_print = 3;
+                              }
                               }
                             ;}
     break;
 
   case 54:
-#line 380 "sintactico.y"
+#line 476 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //para pasarle a $$ un tipo elemento
@@ -2027,19 +2123,23 @@ yyreduce:
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2;
                                 (yyval.elem).valor.valor2 = aux - (yyvsp[(3) - (3)].elem).valor.valor1;
+                                flag_print = 2;
                               }
-                              else if ((yyval.elem).tipo == 2)
+                              else if ((yyval.elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = aux - (yyvsp[(3) - (3)].elem).valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             ;}
     break;
 
   case 55:
-#line 399 "sintactico.y"
+#line 499 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //Apuntar al elemento &3 y no perderlo en la recursion
@@ -2049,19 +2149,23 @@ yyreduce:
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2;
                                 (yyval.elem).valor.valor2 = aux - (yyvsp[(3) - (3)].elem).valor.valor1;
+                                flag_print = 2;
                               }
-                              else if ((yyval.elem).tipo == 2)
+                              else if ((yyval.elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = aux - (yyvsp[(3) - (3)].elem).valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             ;}
     break;
 
   case 56:
-#line 418 "sintactico.y"
+#line 522 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //Apuntar al elemento &3 y no perderlo en la recursion
@@ -2071,58 +2175,81 @@ yyreduce:
                               if ((yyval.elem).tipo == 1){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if ((yyval.elem).tipo == 2){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if((yyval.elem).tipo == 3)
                                 (yyval.elem).valor.valor3 = resta(aux, (yyvsp[(3) - (3)].elem).valor.valor3);
+                                flag_print = 3;
                               }
                             ;}
     break;
 
   case 57:
-#line 437 "sintactico.y"
+#line 544 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2; //Se fuerza a ser de tipo double para no perder los decimales en la recursion
-                                if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo==1)
+                                if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo==1){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 * (yyvsp[(3) - (3)].elem).valor.valor1;
-                                else if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo == 2){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 * (yyvsp[(3) - (3)].elem).valor.valor2;
-                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 1)
+                                  flag_print = 2;
+                                }
+                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 1){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 * (yyvsp[(3) - (3)].elem).valor.valor1;
-                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 2){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 * (yyvsp[(3) - (3)].elem).valor.valor2;
+                                  flag_print = 2;
+                                }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               else if((yyval.elem).tipo ==2){
-                                if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo==1)
+                                if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo==1){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 * (yyvsp[(3) - (3)].elem).valor.valor1;
-                                else if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if((yyvsp[(1) - (3)].elem).tipo == 1 && (yyvsp[(3) - (3)].elem).tipo == 2){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 * (yyvsp[(3) - (3)].elem).valor.valor2;
-                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 1)
+                                  flag_print = 2;
+                                }
+                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 1){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 * (yyvsp[(3) - (3)].elem).valor.valor1;
-                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 2)
+                                  flag_print = 2;
+                                }
+                                else if((yyvsp[(1) - (3)].elem).tipo == 2 && (yyvsp[(3) - (3)].elem).tipo == 2){
                                   (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 * (yyvsp[(3) - (3)].elem).valor.valor2;
+                                  flag_print = 2;
+                                }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               else if((yyval.elem).tipo == 3){
                                 if((yyvsp[(1) - (3)].elem).tipo == 3 && (yyvsp[(3) - (3)].elem).tipo == 3){
                                   printf("\n\t-->ERROR! Operacion no se puede realizar\n");
                                   flag_op = 0;
+                                  flag_print = 0;
                                 }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               }
@@ -2130,61 +2257,73 @@ yyreduce:
     break;
 
   case 58:
-#line 481 "sintactico.y"
+#line 608 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2;
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 * (yyvsp[(3) - (3)].entero);
+                                flag_print = 2;
                               }
-                              else if ((yyval.elem).tipo == 2)
+                              else if ((yyval.elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 * (yyvsp[(3) - (3)].entero);
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             ;}
     break;
 
   case 59:
-#line 496 "sintactico.y"
+#line 627 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2;
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor1 * (yyvsp[(3) - (3)].flotante);
+                                flag_print = 2;
                               }
-                              else if ((yyval.elem).tipo == 2)
+                              else if ((yyval.elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = (yyvsp[(1) - (3)].elem).valor.valor2 * (yyvsp[(3) - (3)].flotante);
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             ;}
     break;
 
   case 60:
-#line 511 "sintactico.y"
+#line 646 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if ((yyval.elem).tipo == 1){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if ((yyval.elem).tipo == 2){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if((yyval.elem).tipo == 3){
                                 if((yyval.elem).tipo == 3){
                                   printf("\n\t-->ERROR! Operacion no se puede realizar\n");
                                   flag_op = 0;
+                                  flag_print = 0;
                                 }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               }
@@ -2192,7 +2331,7 @@ yyreduce:
     break;
 
   case 61:
-#line 534 "sintactico.y"
+#line 673 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //para pasarle a $$ un tipo elemento
@@ -2202,19 +2341,23 @@ yyreduce:
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2;
                                 (yyval.elem).valor.valor2 = aux * (yyvsp[(3) - (3)].elem).valor.valor1;
+                                flag_print = 2;
                               }
-                              else if ((yyval.elem).tipo == 2)
+                              else if ((yyval.elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = aux * (yyvsp[(3) - (3)].elem).valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             ;}
     break;
 
   case 62:
-#line 553 "sintactico.y"
+#line 696 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //Apuntar al elemento &3 y no perderlo en la recursion
@@ -2224,19 +2367,23 @@ yyreduce:
                               if((yyval.elem).tipo == 1){
                                 (yyval.elem).tipo = 2;
                                 (yyval.elem).valor.valor2 = aux * (yyvsp[(3) - (3)].elem).valor.valor1;
+                                flag_print = 2;
                               }
-                              else if ((yyval.elem).tipo == 2)
+                              else if ((yyval.elem).tipo == 2){
                                 (yyval.elem).valor.valor2 = aux * (yyvsp[(3) - (3)].elem).valor.valor2;
+                                flag_print = 2;
+                              }
                               else{
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               }
                             ;}
     break;
 
   case 63:
-#line 572 "sintactico.y"
+#line 719 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //Apuntar al elemento &3 y no perderlo en la recursion
@@ -2246,19 +2393,23 @@ yyreduce:
                               if ((yyval.elem).tipo == 1){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if ((yyval.elem).tipo == 2){
                                 printf("\n\t-->ERROR! Incompatible types\n");
                                 flag_incompatibles = 0;
+                                flag_print = 0;
                               }
                               else if((yyval.elem).tipo == 3){
                                 if((yyval.elem).tipo == 3){
                                   printf("\n\t-->ERROR! Operacion no se puede realizar\n");
                                   flag_op = 0;
+                                  flag_print = 0;
                                 }
                                 else{
                                   printf("\n\t-->ERROR! Incompatible types\n");
                                   flag_incompatibles = 0;
+                                  flag_print = 0;
                                 }
                               }
                               }
@@ -2266,7 +2417,7 @@ yyreduce:
     break;
 
   case 64:
-#line 599 "sintactico.y"
+#line 750 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
@@ -2313,7 +2464,7 @@ yyreduce:
     break;
 
   case 65:
-#line 643 "sintactico.y"
+#line 794 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
@@ -2331,7 +2482,7 @@ yyreduce:
     break;
 
   case 66:
-#line 658 "sintactico.y"
+#line 809 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
@@ -2349,7 +2500,7 @@ yyreduce:
     break;
 
   case 67:
-#line 673 "sintactico.y"
+#line 824 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if ((yyval.elem).tipo == 1){
@@ -2375,7 +2526,7 @@ yyreduce:
     break;
 
   case 68:
-#line 696 "sintactico.y"
+#line 847 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //para pasarle a $$ un tipo elemento
@@ -2397,7 +2548,7 @@ yyreduce:
     break;
 
   case 69:
-#line 715 "sintactico.y"
+#line 866 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //Apuntar al elemento &3 y no perderlo en la recursion
@@ -2419,7 +2570,7 @@ yyreduce:
     break;
 
   case 70:
-#line 734 "sintactico.y"
+#line 885 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //Apuntar al elemento &3 y no perderlo en la recursion
@@ -2449,7 +2600,7 @@ yyreduce:
     break;
 
   case 71:
-#line 761 "sintactico.y"
+#line 912 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
@@ -2496,7 +2647,7 @@ yyreduce:
     break;
 
   case 72:
-#line 805 "sintactico.y"
+#line 956 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
@@ -2514,7 +2665,7 @@ yyreduce:
     break;
 
   case 73:
-#line 820 "sintactico.y"
+#line 971 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if((yyval.elem).tipo == 1){
@@ -2532,7 +2683,7 @@ yyreduce:
     break;
 
   case 74:
-#line 835 "sintactico.y"
+#line 986 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               if ((yyval.elem).tipo == 1){
@@ -2558,7 +2709,7 @@ yyreduce:
     break;
 
   case 75:
-#line 858 "sintactico.y"
+#line 1009 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //para pasarle a $$ un tipo elemento
@@ -2580,7 +2731,7 @@ yyreduce:
     break;
 
   case 76:
-#line 877 "sintactico.y"
+#line 1028 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //Apuntar al elemento &3 y no perderlo en la recursion
@@ -2602,7 +2753,7 @@ yyreduce:
     break;
 
   case 77:
-#line 896 "sintactico.y"
+#line 1047 "sintactico.y"
     {
                               if(flag_esta == 1 && flag_incompatibles == 1 && flag_op==1){
                               elemento*e_aux; //Apuntar al elemento &3 y no perderlo en la recursion
@@ -2632,7 +2783,7 @@ yyreduce:
     break;
 
   case 78:
-#line 923 "sintactico.y"
+#line 1074 "sintactico.y"
     {
                       elemento e;
                       int tipo;
@@ -2662,7 +2813,7 @@ yyreduce:
     break;
 
   case 79:
-#line 950 "sintactico.y"
+#line 1101 "sintactico.y"
     {
                                       elemento e;
                                       //posicion p_expVar;
@@ -2738,7 +2889,7 @@ yyreduce:
     break;
 
   case 80:
-#line 1023 "sintactico.y"
+#line 1174 "sintactico.y"
     {
                                     elemento e;
 
@@ -2775,7 +2926,7 @@ yyreduce:
     break;
 
   case 81:
-#line 1057 "sintactico.y"
+#line 1208 "sintactico.y"
     {
                                   elemento e;
                                   if(!strcmp((yyvsp[(1) - (5)].str), "int")){
@@ -2811,7 +2962,7 @@ yyreduce:
     break;
 
   case 82:
-#line 1090 "sintactico.y"
+#line 1241 "sintactico.y"
     {
                                     elemento e;
                                     if(!strcmp((yyvsp[(1) - (5)].str), "int")){
@@ -2837,7 +2988,7 @@ yyreduce:
     break;
 
   case 83:
-#line 1114 "sintactico.y"
+#line 1265 "sintactico.y"
     {
                           elemento e;
                           posicion p;
@@ -2873,7 +3024,7 @@ yyreduce:
     break;
 
   case 84:
-#line 1147 "sintactico.y"
+#line 1298 "sintactico.y"
     {
                             elemento e;
                             posicion p;
@@ -2908,7 +3059,7 @@ yyreduce:
     break;
 
   case 85:
-#line 1179 "sintactico.y"
+#line 1330 "sintactico.y"
     {
                             elemento e;
                             posicion p;
@@ -2942,7 +3093,7 @@ yyreduce:
     break;
 
   case 86:
-#line 1210 "sintactico.y"
+#line 1361 "sintactico.y"
     {
                             elemento e;
                             posicion p;
@@ -3010,53 +3161,53 @@ yyreduce:
     break;
 
   case 87:
-#line 1277 "sintactico.y"
+#line 1428 "sintactico.y"
     { printf("\n\t-->ERROR! te falto escribir ';'\n"); ;}
     break;
 
   case 88:
-#line 1278 "sintactico.y"
+#line 1429 "sintactico.y"
     { printf("\n\t-->ERROR! te falto escribir ';'\n"); ;}
     break;
 
   case 89:
-#line 1279 "sintactico.y"
+#line 1430 "sintactico.y"
     { printf("\n\t-->ERROR! te falto escribir ';'\n"); ;}
     break;
 
   case 90:
-#line 1280 "sintactico.y"
+#line 1431 "sintactico.y"
     { printf("\n\t-->ERROR! te falto escribir ';'\n"); ;}
     break;
 
   case 91:
-#line 1281 "sintactico.y"
+#line 1432 "sintactico.y"
     { printf("\n\t-->ERROR! te falto escribir ';'\n"); ;}
     break;
 
   case 92:
-#line 1282 "sintactico.y"
+#line 1433 "sintactico.y"
     { printf("\n\t-->ERROR! te falto escribir ';'\n"); ;}
     break;
 
   case 93:
-#line 1283 "sintactico.y"
+#line 1434 "sintactico.y"
     { printf("\n\t-->ERROR! te falto escribir ';'\n"); ;}
     break;
 
   case 94:
-#line 1284 "sintactico.y"
+#line 1435 "sintactico.y"
     { printf("\n\t-->ERROR! te falto escribir ';'\n"); ;}
     break;
 
   case 95:
-#line 1285 "sintactico.y"
+#line 1436 "sintactico.y"
     { printf("\n\t-->ERROR! te falto escribir ';'\n"); ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 3060 "sintactico.tab.c"
+#line 3211 "sintactico.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -3270,7 +3421,7 @@ yyreturn:
 }
 
 
-#line 1288 "sintactico.y"
+#line 1439 "sintactico.y"
 
 
 int main(){
