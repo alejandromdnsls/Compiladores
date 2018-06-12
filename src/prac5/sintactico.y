@@ -20,21 +20,22 @@ int flag_print = 0; // controla la impresion de resultado para hacer la que corr
   int entero;
   double flotante;
   char* str;
-  Valor valor;
   elemento elem;
 }
 
 %token <entero> ENTERO /* terminal, define el token y su tipo */
 %token <flotante> REAL
 %token <str> CADENA TIPO
-%token <str> ID
+%token <str> ID IF
 %token POW
+%token IGUAL
 %type <entero> exp_e /* no terminal */
 %type <flotante> exp_f
 %type <str> exp_c
-/*%type <valor> exp_v*/
+%type <entero> expCondicion
 %type <elem> expVar
-%left '='
+%left '('')'
+%left '>''<' IGUAL '='
 %left '+''-'
 %left '*''/'
 
@@ -70,6 +71,12 @@ line:     '\n'
                           flag_esta=1;
                       }
         | err '\n'
+        | expCondicion '\n' {
+                              if($1==1)
+                                printf("\n\tIF: True\n");
+                              else
+                                printf("\n\tIF: False\n");
+                            }
 ;
 
 exp_e:  ENTERO { $$ = $1; /*printf("%d\n", $1);*/ }
@@ -81,6 +88,11 @@ exp_e:  ENTERO { $$ = $1; /*printf("%d\n", $1);*/ }
         | exp_e '/' exp_e { $$ = $1 / $3; }
         //| exp_e '%' exp_e { $$ = $1 % $3; }
         | POW '(' exp_e ',' exp_e ')' { $$ = pow($3,$5); }
+        | exp_e '+' exp_c {printf("\n\t-->ERROR! Operacion no permitida\n"); $$=0;}
+        | exp_e '-' exp_c {printf("\n\t-->ERROR! Operacion no permitida\n"); $$=0;}
+        | exp_e '*' exp_c {printf("\n\t-->ERROR! Operacion no permitida\n"); $$=0;}
+        | exp_e '/' exp_c {printf("\n\t-->ERROR! Operacion no permitida\n"); $$=0;}
+
 ;
 
 exp_f:  REAL { $$ = $1; /*printf("%f\n", $1);*/ }
@@ -104,6 +116,10 @@ exp_f:  REAL { $$ = $1; /*printf("%f\n", $1);*/ }
         | exp_f '/' exp_e { $$ = $1 / $3; }
         //| exp_f '%' exp_e { $$ = $1 % $3; }
         | POW '(' exp_f ',' exp_e ')' { $$ = pow($3,$5); }
+        | exp_f '+' exp_c {printf("\n\t-->ERROR! Operacion no permitida\n"); $$=0;}
+        | exp_f '-' exp_c {printf("\n\t-->ERROR! Operacion no permitida\n"); $$=0;}
+        | exp_f '*' exp_c {printf("\n\t-->ERROR! Operacion no permitida\n"); $$=0;}
+        | exp_f '/' exp_c {printf("\n\t-->ERROR! Operacion no permitida\n"); $$=0;}
 
 ;
 
@@ -158,6 +174,22 @@ expVar: ID  {
                       }
                       }
                     }
+      | '(' expVar ')'{
+                        elemento*e_aux; //Pasa una copia a $$ un tipo elemento
+                        e_aux = &$2;
+        $$ = *e_aux;
+        if($$.tipo == 1){
+          $$.valor.valor1 = $2.valor.valor1;
+          flag_print = 1;
+        }
+        else if($$.tipo == 2){
+          $$.valor.valor2 = $2.valor.valor2;
+          flag_print = 2;
+        }
+        else if($$.tipo == 3){
+          $$.valor.valor3 = $2.valor.valor3;
+        }
+                      }
 
       | expVar '+' expVar {
                             //printf("$$.name: %s\n", $$.name);
@@ -1422,6 +1454,100 @@ asig: ID '=' exp_e ';'  {
                               flag_op = 1;
                             }
                           }
+;
+
+expCondicion:  IF '(' expVar '<' expVar ')' ';' {
+                                                  if($3.tipo==1 && $3.tipo==1){
+                                                    if($3.valor.valor1 < $5.valor.valor1)
+                                                      $$ = 1;
+                                                    else
+                                                      $$ = 0;
+                                                  }
+                                                  else if($3.tipo==1 && $3.tipo==2){
+                                                    if($3.valor.valor1 < $5.valor.valor2)
+                                                      $$ = 1;
+                                                    else
+                                                      $$ = 0;
+                                                  }
+                                                  else if ($3.tipo==2 && $3.tipo==1){
+                                                    if($3.valor.valor2 < $5.valor.valor1)
+                                                      $$ = 1;
+                                                    else
+                                                      $$ = 0;
+                                                  }
+                                                  else if($3.tipo==2 && $3.tipo==2){
+                                                    if($3.valor.valor2 < $5.valor.valor2)
+                                                      $$ = 1;
+                                                    else
+                                                      $$ = 0;
+                                                  }
+
+                                                  else{
+                                                    printf("--->ERROR! no se puede\n");
+                                                  }
+                                                }
+
+|IF '(' expVar '>' expVar ')' ';' {
+                                                  if($3.tipo==1 && $3.tipo==1){
+                                                    if($3.valor.valor1 > $5.valor.valor1)
+                                                      $$ = 1;
+                                                    else
+                                                      $$ = 0;
+                                                  }
+                                                  else if($3.tipo==1 && $3.tipo==2){
+                                                    if($3.valor.valor1 > $5.valor.valor2)
+                                                      $$ = 1;
+                                                    else
+                                                      $$ = 0;
+                                                  }
+                                                  else if ($3.tipo==2 && $3.tipo==1){
+                                                    if($3.valor.valor2 > $5.valor.valor1)
+                                                      $$ = 1;
+                                                    else
+                                                      $$ = 0;
+                                                  }
+                                                  else if($3.tipo==2 && $3.tipo==2){
+                                                    if($3.valor.valor2 > $5.valor.valor2)
+                                                      $$ = 1;
+                                                    else
+                                                      $$ = 0;
+                                                  }
+
+                                                  else{
+                                                    printf("--->ERROR! no se puede\n");
+                                                  }
+                                                }
+
+|IF '(' expVar IGUAL expVar ')' ';' {
+                                                  if($3.tipo==1 && $3.tipo==1){
+                                                    if($3.valor.valor1 == $5.valor.valor1)
+                                                      $$ = 1;
+                                                    else
+                                                      $$ = 0;
+                                                  }
+                                                  else if($3.tipo==1 && $3.tipo==2){
+                                                    if($3.valor.valor1 == $5.valor.valor2)
+                                                      $$ = 1;
+                                                    else
+                                                      $$ = 0;
+                                                  }
+                                                  else if ($3.tipo==2 && $3.tipo==1){
+                                                    if($3.valor.valor2 == $5.valor.valor1)
+                                                      $$ = 1;
+                                                    else
+                                                      $$ = 0;
+                                                  }
+                                                  else if($3.tipo==2 && $3.tipo==2){
+                                                    if($3.valor.valor2 == $5.valor.valor2)
+                                                      $$ = 1;
+                                                    else
+                                                      $$ = 0;
+                                                  }
+
+                                                  else{
+                                                    printf("--->ERROR! no se puede\n");
+                                                  }
+                                                }
 ;
 
 

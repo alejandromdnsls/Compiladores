@@ -47,6 +47,10 @@ CAD "\""[^'"\n]+"\""
                   printf("Potencia %s\n", yytext);
                   return (POW);
                   }
+"if"              {
+                    printf("if %s\n", yytext);
+                    return (IF);
+                  }
 
 {TIPO}            {
                   printf("Tipo de dato: %s\n", yytext);
@@ -137,6 +141,21 @@ CAD "\""[^'"\n]+"\""
 "\n"              {
                   printf("\nSalto de linea %s\n", yytext);
                   return (yytext[0]);
+                  }
+
+">"               {
+                  printf("\nMayor %s\n", yytext);
+                  return (yytext[0]);
+                  }
+
+"<"               {
+                  printf("\nMenor%s\n", yytext);
+                  return (yytext[0]);
+                  }
+
+"=="              {
+                  printf("\nIgual %s\n", yytext);
+                  return (IGUAL);
                   }
 
 .                 ;

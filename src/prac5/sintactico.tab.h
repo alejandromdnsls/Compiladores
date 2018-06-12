@@ -44,7 +44,9 @@
      CADENA = 260,
      TIPO = 261,
      ID = 262,
-     POW = 263
+     IF = 263,
+     POW = 264,
+     IGUAL = 265
    };
 #endif
 /* Tokens.  */
@@ -53,7 +55,9 @@
 #define CADENA 260
 #define TIPO 261
 #define ID 262
-#define POW 263
+#define IF 263
+#define POW 264
+#define IGUAL 265
 
 
 
@@ -69,7 +73,7 @@ typedef union YYSTYPE
   elemento elem;
 }
 /* Line 1529 of yacc.c.  */
-#line 73 "sintactico.tab.h"
+#line 77 "sintactico.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
