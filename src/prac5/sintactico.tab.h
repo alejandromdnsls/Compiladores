@@ -46,7 +46,7 @@
      ID = 262,
      IF = 263,
      POW = 264,
-     IGUAL = 265
+     IGUAL_A = 265
    };
 #endif
 /* Tokens.  */
@@ -57,23 +57,22 @@
 #define ID 262
 #define IF 263
 #define POW 264
-#define IGUAL 265
+#define IGUAL_A 265
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 19 "sintactico.y"
+#line 22 "sintactico.y"
 {  /* especifica la colección completa de tipo de datos pibles */
   int entero;
   double flotante;
   char* str;
-  Valor valor;
   elemento elem;
 }
 /* Line 1529 of yacc.c.  */
-#line 77 "sintactico.tab.h"
+#line 76 "sintactico.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

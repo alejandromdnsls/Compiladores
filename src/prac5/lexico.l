@@ -47,6 +47,7 @@ CAD "\""[^'"\n]+"\""
                   printf("Potencia %s\n", yytext);
                   return (POW);
                   }
+
 "if"              {
                     printf("if %s\n", yytext);
                     return (IF);
@@ -123,7 +124,17 @@ CAD "\""[^'"\n]+"\""
                   }
 
 ")"               {
-                  printf("Parentesis cerrado: %s\n", yytext);
+                  printf("Parentesis cerrar: %s\n", yytext);
+                  return (yytext[0]);
+                  }
+
+"["               {
+                  printf("Corchete abrir: %s\n", yytext);
+                  return (yytext[0]);
+                  }
+
+"]"               {
+                  printf("Corchete cerrar: %s\n", yytext);
                   return (yytext[0]);
                   }
 
@@ -144,18 +155,18 @@ CAD "\""[^'"\n]+"\""
                   }
 
 ">"               {
-                  printf("\nMayor %s\n", yytext);
+                  printf("\nOperador Mayor: %s\n", yytext);
                   return (yytext[0]);
                   }
 
 "<"               {
-                  printf("\nMenor%s\n", yytext);
+                  printf("\nOperador Menor: %s\n", yytext);
                   return (yytext[0]);
                   }
 
 "=="              {
-                  printf("\nIgual %s\n", yytext);
-                  return (IGUAL);
+                  printf("\nOperador Igualdad: %s\n", yytext);
+                  return (IGUAL_A);
                   }
 
 .                 ;
